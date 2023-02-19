@@ -4,6 +4,7 @@ namespace Pfe.ChatbotApi
     {
         public DateOnly Date { get; set; }
         public DateTime CurrentDate { get; set; }
+        public DateTime NewDate { get; set; }
 
         public int TemperatureC { get; set; }
 
