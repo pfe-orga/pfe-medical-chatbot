@@ -8,11 +8,11 @@ namespace Pfe.ChatbotApi.Core
     {
         [Key, Required]
         public int Id { get; set; }
-        public int prodfuct_Id { get; set; }
+        public int ProductId { get; set; }
         public virtual Product Product { get; set; }
-        public string name { get; set; } = string.Empty;
-        public string adress { get; set; } = string.Empty;
-        public string phone { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Adress { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
 
 
     }

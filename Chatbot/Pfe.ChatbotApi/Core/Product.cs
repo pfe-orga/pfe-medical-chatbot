@@ -8,9 +8,9 @@ namespace Pfe.ChatbotApi.Core
     {
         [Key, Required]
         public int Id { get; set; }
-        public int name { get; set; }
-        public int brand { get; set; }
-        public int size { get; set; }
-        public int price { get; set; }
+        public int Name { get; set; }
+        public int Brand { get; set; }
+        public int Size  { get; set; }
+        public int Price { get; set; }
     }
 }
