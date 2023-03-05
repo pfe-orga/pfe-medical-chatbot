@@ -11,8 +11,8 @@ using Pfe.ChatbotApi.Core;
 namespace Pfe.ChatbotApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230305111550_FirstDataBase")]
-    partial class FirstDataBase
+    [Migration("20230305181946_ChatBot1.0")]
+    partial class ChatBot10
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,22 +32,19 @@ namespace Pfe.ChatbotApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Adress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("adress")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("phone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("prodfuct_Id")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -65,17 +62,20 @@ namespace Pfe.ChatbotApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("brand")
-                        .HasColumnType("integer");
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<int>("name")
-                        .HasColumnType("integer");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<int>("price")
-                        .HasColumnType("integer");
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
 
-                    b.Property<int>("size")
-                        .HasColumnType("integer");
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

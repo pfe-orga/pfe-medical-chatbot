@@ -4,13 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
 using Pfe.ChatbotApi.Core;
+using Pfe.ChatbotApi.Services.Classes;
+using Pfe.ChatbotApi.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<DataContext>
     (options =>options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
-
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 

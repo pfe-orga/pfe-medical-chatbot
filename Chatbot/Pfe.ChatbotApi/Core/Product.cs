@@ -7,10 +7,11 @@ namespace Pfe.ChatbotApi.Core
     public class Product
     {
         [Key, Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int Name { get; set; }
-        public int Brand { get; set; }
-        public int Size  { get; set; }
-        public int Price { get; set; }
+        public String Name { get; set; }
+        public String Brand { get; set; }
+        public String Size  { get; set; }
+        public Double Price { get; set; }
     }
 }
