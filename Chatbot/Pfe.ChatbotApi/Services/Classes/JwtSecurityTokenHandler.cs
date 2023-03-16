@@ -19,8 +19,8 @@ namespace Pfe.ChatbotApi.Services.Classes
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: "your-issuer",
-                audience: "your-audience",
+                issuer: "SecureApi",
+                audience: "SecureApiUser",
                 claims: claims,
                 expires: DateTime.Now.AddDays(7),
                 signingCredentials: credentials);
