@@ -13,6 +13,8 @@ namespace Pfe.ChatbotApi.Services.Classes
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public string Password{ get; set; }
+        public string Adresse { get; set; }
     }
     
 }
