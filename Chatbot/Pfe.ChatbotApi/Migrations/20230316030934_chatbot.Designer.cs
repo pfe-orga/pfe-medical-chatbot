@@ -11,8 +11,8 @@ using Pfe.ChatbotApi.Controllers;
 namespace Pfe.ChatbotApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230315043155_chatbott")]
-    partial class chatbott
+    [Migration("20230316030934_chatbot")]
+    partial class chatbot
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,11 +32,11 @@ namespace Pfe.ChatbotApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 

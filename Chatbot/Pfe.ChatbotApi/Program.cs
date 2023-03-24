@@ -12,12 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
+
+builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -27,7 +23,31 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["SecureApi"],
         ValidAudience = builder.Configuration["SecureApiUser"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["sz8eI7OdHBrjrIo8j9nTW/rQyO1OvY0pAQ2wDKQZw/0="]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("sz8eI7OdHBrjrIo8j9nTW/rQyO1OvY0pAQ2wDKQZw/0="))
+    };
+});
+
+// Remove the existing Bearer scheme if it exists
+var bearerScheme = AppServicesAuthenticationDefaults.AuthenticationScheme;
+
+
+// Add the Bearer scheme again
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = bearerScheme;
+    options.DefaultChallengeScheme = bearerScheme;
+})
+.AddJwtBearer(bearerScheme, options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+         ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["SecureApi"],
+        ValidAudience = builder.Configuration["SecureApiUser"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("sz8eI7OdHBrjrIo8j9nTW/rQyO1OvY0pAQ2wDKQZw/0="))
     };
 });
 
