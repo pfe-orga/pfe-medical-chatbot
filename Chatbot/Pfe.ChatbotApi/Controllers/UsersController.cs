@@ -7,7 +7,7 @@ namespace Pfe.ChatbotApi.Controllers {
 
 [Route("[controller]")]
     [Authorize]
-    public class UsersController : ControllerBase
+    public class UsersController : Controller
     {   
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
