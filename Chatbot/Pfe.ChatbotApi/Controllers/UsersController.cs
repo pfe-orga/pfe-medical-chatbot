@@ -20,6 +20,7 @@ namespace Pfe.ChatbotApi.Controllers {
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
+            //
         }
 
         // ...
