@@ -7,6 +7,7 @@ using Pfe.ChatbotApi.Core;
 using Pfe.ChatbotApi.Services.Classes;
 using Pfe.ChatbotApi.Services.Interfaces;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -22,6 +23,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.MapGet("/security/getMessage",
+() => "Hello World!").RequireAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
