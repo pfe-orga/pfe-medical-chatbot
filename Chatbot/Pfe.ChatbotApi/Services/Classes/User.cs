@@ -9,7 +9,7 @@ namespace Pfe.ChatbotApi.Services.Classes
 
         [Key, Required]
          [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-
+         //dazdazdazda
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
