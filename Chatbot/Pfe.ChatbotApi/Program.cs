@@ -33,7 +33,7 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = false,
         ValidateIssuerSigningKey = true
     };
-});
+});//
 builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<DataContext>
