@@ -13,6 +13,10 @@ using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+app.MapGet("/security/getMessage",
+() => "Hello World!").RequireAuthorization();
+app.Run();
 
 // Add services to the container.
 builder.Services.AddAuthentication(options =>
