@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
 using Pfe.ChatbotApi.Core;
-
+using Pfe.ChatbotApi.Services.Classes;
+using Pfe.ChatbotApi.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

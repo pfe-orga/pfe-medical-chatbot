@@ -43,14 +43,16 @@ namespace Pfe.ChatbotApi.Controllers
             }
             return Ok(user);
         }
+        /* PROB HERE WHEN I RUN I GET Failed to load API definition.
+
         public string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>() {
                 new Claim(ClaimTypes.Name, user.Email)
         };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:token").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+                _configuration.GetSection("AppSettings:token").Value!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.Now.AddDays(1),
@@ -59,6 +61,6 @@ namespace Pfe.ChatbotApi.Controllers
                 ) ; 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token) ;
             return jwt;
-        }
+        }*/
     }
 }
