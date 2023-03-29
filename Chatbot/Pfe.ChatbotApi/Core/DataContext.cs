@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+
 namespace Pfe.ChatbotApi.Core
 {
     public class DataContext : DbContext   

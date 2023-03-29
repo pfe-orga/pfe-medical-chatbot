@@ -1,92 +1,64 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Crypto.Generators;
 using Pfe.ChatbotApi.Core;
-using Pfe.ChatbotApi.Services.Interfaces;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Pfe.ChatbotApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] 
     public class UserController : ControllerBase
-
     {
-        private readonly IUserService _userService;
-
-        public UserController(IUserService userService)
+        public static User user =new User();
+        public readonly IConfiguration _configuration;
+        public UserController(IConfiguration configuration)
         {
-            _userService = userService;
+           _configuration = configuration;
         }
 
-
-        // GET: api/<UserController>
-        [HttpGet("getUserlist")]
-        public IEnumerable<User> Get()
+        [HttpPost("register")]
+        public ActionResult<User>Register(Userrequest request)
         {
-            return _userService.List();
+           string password 
+                = BCrypt.Net.BCrypt.HashPassword(request.Password); 
+            user.Name=request.Name; 
+            user.Password=password;
+            user.Email=request.Email;
+            return Ok(user);
         }
-
-        // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpPost("login")]
+        public ActionResult<User> login(Userrequest request)
         {
-            return "value";
+            if(user.Email!=request.Email)
+            {
+                return BadRequest("user not found.");
+            }
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            {
+                return BadRequest("wrong password.");
+            }
+            return Ok(user);
         }
-
-        // POST api/<UserController>
-        [HttpPost("adduser")]
-        public async Task<IActionResult> AddUserAsync(User user)
+        public string CreateToken(User user)
         {
-            if (user == null)
-            {
-                return BadRequest();
-            }
+            List<Claim> claims = new List<Claim>() {
+                new Claim(ClaimTypes.Name, user.Email)
+        };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:token").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials:creds
 
-            try
-            {
-                var response = await _userService.AddUserAsync(user);
-
-                return Ok(response);
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUserAsync(User user)
-        {
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                var result = await _userService.UpdateUserAsync(user);
-                return Ok(result);
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public async Task<User> DeleteUserAsync(int Id)
-        {
-            try
-            {
-                var response = await _userService.DeleteUserAsync(Id);
-                return response;
-            }
-            catch
-            {
-                throw;
-            }
+                ) ; 
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token) ;
+            return jwt;
         }
     }
 }
