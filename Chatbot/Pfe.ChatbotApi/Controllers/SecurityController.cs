@@ -17,8 +17,9 @@ namespace Pfe.ChatbotApi.Controllers
     public class SecurityController : ControllerBase
 
     {   public static User user = new User();
+        private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        public SecurityController(IConfiguration configuration, MyDbContext context)
+        public SecurityController(IConfiguration configuration, DataContext context)
         {
             _context = context;
 
