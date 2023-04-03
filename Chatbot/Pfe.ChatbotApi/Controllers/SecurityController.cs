@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Pfe.ChatbotApi.Core;
 using Pfe.ChatbotApi.Dto;
@@ -14,7 +15,7 @@ namespace Pfe.ChatbotApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class SecurityController : ControllerBase
-    {
+    {   public static User user = new User();
         private readonly IConfiguration _configuration;
         public SecurityController(IConfiguration configuration)
         {
@@ -56,7 +57,20 @@ namespace Pfe.ChatbotApi.Controllers
             }
             return Unauthorized("invalid user or pwd");
         }
+        
+        [HttpPost("register")]
+        public ActionResult<User> Register(UserRequest request)
+        {
+            string password
+                 = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            user.Name = request.Name;
+            user.Password = password;
+            user.Email = request.Email;
+            _context.Users.Add(user);
 
+
+            return Ok(user);
+        }
         [Authorize]
         // PUT api/<SecurityController>/5
         [HttpPut("{id}")]
