@@ -15,10 +15,13 @@ namespace Pfe.ChatbotApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class SecurityController : ControllerBase
+
     {   public static User user = new User();
         private readonly IConfiguration _configuration;
-        public SecurityController(IConfiguration configuration)
+        public SecurityController(IConfiguration configuration, MyDbContext context)
         {
+            _context = context;
+
             _configuration = configuration;
         }
 
