@@ -33,36 +33,64 @@ namespace Pfe.ChatbotApi.Controllers
         //// POST api/<SecurityController>
         [AllowAnonymous]
         [HttpPost("token")]
-        public async Task<IActionResult> Post([FromBody] Login login)
+        public ActionResult Post([FromBody] Login login)
         {
-            if (login.UserName == "admin" && login.Password == "admin")
+            if (login.Provider == "Facebook")
             {
-                var claims = new List<Claim>
-        {
-            new Claim("Id", Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Sub, login.UserName),
-            new Claim(JwtRegisteredClaimNames.Email, login.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-                // Add additional claims as needed
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity));
-
-                // Redirect to Facebook login
-                if (login.Provider == "Facebook")
+                var issuer = _configuration["Jwt:Issuer"];
+                var audience = _configuration["Jwt:Audience"];
+                var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    return Challenge(new AuthenticationProperties { RedirectUri = "/" }, FacebookDefaults.AuthenticationScheme);
-                }
-
-                var token = GenerateToken(claims);
-                return Ok(token);
+                    Subject = new ClaimsIdentity(new[]
+                    {
+                new Claim("Id", Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, login.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, login.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            }),
+                    Expires = DateTime.UtcNow.AddMinutes(2),
+                    Issuer = issuer,
+                    Audience = audience,
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                        SecurityAlgorithms.HmacSha512Signature)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var jwtToken = tokenHandler.WriteToken(token);
+                var stringToken = tokenHandler.WriteToken(token);
+                return Ok(stringToken);
             }
-            return Unauthorized("Invalid user or password");
+            else if (login.UserName == "admin" && login.Password == "admin")
+            {
+                // Authenticate with username and password and generate JWT token
+                var issuer = _configuration["Jwt:Issuer"];
+                var audience = _configuration["Jwt:Audience"];
+                var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[]
+                    {
+                new Claim("Id", Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, login.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, login.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            }),
+                    Expires = DateTime.UtcNow.AddMinutes(2),
+                    Issuer = issuer,
+                    Audience = audience,
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                        SecurityAlgorithms.HmacSha512Signature)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var jwtToken = tokenHandler.WriteToken(token);
+                var stringToken = tokenHandler.WriteToken(token);
+                return Ok(stringToken);
+            }
+            return Unauthorized("invalid user or pwd");
         }
+
 
         [HttpPost("register")]
         public ActionResult<User> Register(UserRequest request)
