@@ -101,6 +101,7 @@ namespace Pfe.ChatbotApi.Controllers
             user.Password = password;
             user.Email = request.Email;
             _context.Users.Add(user);
+            _context.SaveChanges();
 
 
             return Ok(user);
