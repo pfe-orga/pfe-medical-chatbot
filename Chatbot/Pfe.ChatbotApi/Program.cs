@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -44,13 +45,24 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme; // or GoogleDefaults.AuthenticationScheme for Google
+    options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme; 
 })
    .AddCookie()
    .AddFacebook(options =>
    {
        options.AppId = builder.Configuration["Facebook:AppId"];
        options.AppSecret = builder.Configuration["Facebook:AppSecret"];
+   });
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+ 
+   .AddGoogle(options =>
+{       options.ClientId = builder.Configuration["Google:ClientId"];
+       options.ClientSecret = builder.Configuration["Google:ClientSecret"];
    });
 
 builder.Services.AddControllers();

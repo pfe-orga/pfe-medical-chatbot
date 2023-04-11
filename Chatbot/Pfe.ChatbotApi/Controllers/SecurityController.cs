@@ -35,7 +35,7 @@ namespace Pfe.ChatbotApi.Controllers
         [HttpPost("token")]
         public ActionResult Post([FromBody] Login login)
         {
-            if (login.Provider == "Facebook")
+            if (login.Provider == "Facebook" || login.Provider ==  "Google")
             {
                 var issuer = _configuration["Jwt:Issuer"];
                 var audience = _configuration["Jwt:Audience"];
@@ -49,7 +49,7 @@ namespace Pfe.ChatbotApi.Controllers
                 new Claim(JwtRegisteredClaimNames.Email, login.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }),
-                    Expires = DateTime.UtcNow.AddMinutes(2),
+                    Expires = DateTime.UtcNow.AddDays(7),
                     Issuer = issuer,
                     Audience = audience,
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
@@ -76,7 +76,7 @@ namespace Pfe.ChatbotApi.Controllers
                 new Claim(JwtRegisteredClaimNames.Email, login.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }),
-                    Expires = DateTime.UtcNow.AddMinutes(2),
+                    Expires = DateTime.UtcNow.AddDays(7),
                     Issuer = issuer,
                     Audience = audience,
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
