@@ -29,8 +29,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  get:
   flutter:
     sdk: flutter
+  fullscreen: ^1.0.3
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -59,6 +62,9 @@ flutter:
     - lib/assets/kawaii_copy.png
     - lib/assets/image.png
     - lib/assets/swipelogo.png
+    - lib/assets/fblogo.png
+    - lib/assets/googlelogo.png
+    - lib/assets/lovepik-abstract-background-mobile-phone-wallpaper-image_400624615.jpg
   fonts:
     - family: SofiaProLight
       fonts:
