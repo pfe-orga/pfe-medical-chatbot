@@ -9,8 +9,11 @@ namespace Pfe.ChatbotApi.Core
         [Key, Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [Required]
         public String Name { get; set; } = string .Empty;
-        public String Email { get; set; } = string.Empty; 
+        [Required]
+        public String Email { get; set; } = string.Empty;
+        [Required]
         public String Password { get; set; } = string.Empty;
         
     }

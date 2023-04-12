@@ -38,6 +38,10 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = false,
         ValidateIssuerSigningKey = true
     };
+}).AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
 });
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
@@ -54,16 +58,8 @@ builder.Services.AddAuthentication(options =>
        options.AppSecret = builder.Configuration["Facebook:AppSecret"];
    });
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-})
- 
-   .AddGoogle(options =>
-{       options.ClientId = builder.Configuration["Google:ClientId"];
-       options.ClientSecret = builder.Configuration["Google:ClientSecret"];
-   });
+
+   
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

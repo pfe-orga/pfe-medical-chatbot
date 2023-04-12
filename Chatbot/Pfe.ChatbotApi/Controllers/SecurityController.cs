@@ -11,6 +11,7 @@ using Pfe.ChatbotApi.Dto;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Google.Apis.Auth;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,6 +22,7 @@ namespace Pfe.ChatbotApi.Controllers
     public class SecurityController : ControllerBase
 
     {   public static User user = new User();
+        private string idToken;
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         public SecurityController(IConfiguration configuration, DataContext context)
@@ -33,10 +35,26 @@ namespace Pfe.ChatbotApi.Controllers
         //// POST api/<SecurityController>
         [AllowAnonymous]
         [HttpPost("token")]
-        public ActionResult Post([FromBody] Login login)
+        public async Task<ActionResult> PostAsync([FromBody] Login login)
         {
-            if (login.Provider == "Facebook" || login.Provider ==  "Google")
-            {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == login.Email && x.Password == login.Password);
+             if (login.Provider == "Facebook" || login.Provider == "Google")
+            { if (login.Provider == "Google")
+                {
+                    GoogleJsonWebSignature.Payload payload;
+                    try
+                    {
+                        var settings = new GoogleJsonWebSignature.ValidationSettings
+                        {
+                            Audience = new[] { _configuration["Google:ClientId"] }
+                        };
+                        payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+                    }
+                    catch (InvalidJwtException)
+                    {
+                        return BadRequest("Invalid token.");
+                    }
+                }
                 var issuer = _configuration["Jwt:Issuer"];
                 var audience = _configuration["Jwt:Audience"];
                 var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
@@ -45,8 +63,8 @@ namespace Pfe.ChatbotApi.Controllers
                     Subject = new ClaimsIdentity(new[]
                     {
                 new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, login.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, login.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, login.Email),
+                new Claim(JwtRegisteredClaimNames.Email, login.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }),
                     Expires = DateTime.UtcNow.AddDays(7),
@@ -61,7 +79,9 @@ namespace Pfe.ChatbotApi.Controllers
                 var stringToken = tokenHandler.WriteToken(token);
                 return Ok(stringToken);
             }
-            else if (login.UserName == "admin" && login.Password == "admin")
+
+
+            else if (user != null)
             {
                 // Authenticate with username and password and generate JWT token
                 var issuer = _configuration["Jwt:Issuer"];
@@ -72,8 +92,8 @@ namespace Pfe.ChatbotApi.Controllers
                     Subject = new ClaimsIdentity(new[]
                     {
                 new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, login.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, login.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, login.Email),
+                new Claim(JwtRegisteredClaimNames.Email, login.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }),
                     Expires = DateTime.UtcNow.AddDays(7),
@@ -91,6 +111,9 @@ namespace Pfe.ChatbotApi.Controllers
             return Unauthorized("invalid user or pwd");
         }
 
+       
+           
+           
 
         [HttpPost("register")]
         public ActionResult<User> Register(UserRequest request)

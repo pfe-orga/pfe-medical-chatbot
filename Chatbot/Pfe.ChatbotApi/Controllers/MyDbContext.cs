@@ -1,4 +1,0 @@
-﻿namespace Pfe.ChatbotApi.Controllers
-{
-   
-}
