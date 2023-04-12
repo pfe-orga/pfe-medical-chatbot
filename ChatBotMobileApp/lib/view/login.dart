@@ -9,6 +9,7 @@ class Login extends StatelessWidget {
 
     // Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         decoration: BoxDecoration(
 
@@ -104,7 +105,7 @@ class Login extends StatelessWidget {
                           obscureText: true,
                         )
                         ),
-                        SizedBox(height: 70),
+                        SizedBox(height: 40),
                         GestureDetector(
                             onHorizontalDragEnd: (DragEndDetails details){
                               if (details.primaryVelocity! > 0) {
@@ -114,7 +115,19 @@ class Login extends StatelessWidget {
                                 // User swiped Right
                               }
                             },
-                            child: Image.asset("lib/assets/swipelogo.png", height: 50,width: 50,)
+                            child: Image.asset("lib/assets/swipelogo.png", height: 40,width: 40,)
+                        ),
+                        SizedBox(height: 10,),
+                        Text('Swipe right to login',
+
+                          style: TextStyle(fontFamily: 'SofiaProLight',
+                            fontSize: 18 ,
+                            fontWeight: FontWeight.w300,
+                            foreground: Paint()
+                              ..color = Colors.white
+                              ..strokeWidth = 1
+                              ..style = PaintingStyle.stroke,
+                          ),
                         ),
                       ]
                   ),

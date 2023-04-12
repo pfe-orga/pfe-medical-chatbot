@@ -9,69 +9,37 @@ class Register extends StatelessWidget {
 
     // Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [Container(
+            decoration: BoxDecoration(
 
-          image: DecorationImage(
-            image: AssetImage("lib/assets/GHOST.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Column(
-            children: [
-            SizedBox(height: 100),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:[
-                Container(
-                  alignment: Alignment.center,
-                  child: Container(
-                    child: Image.asset('lib/assets/logokawaii.png'),
-                    height: 100,
-                  ),
+              image: DecorationImage(
+                image: AssetImage("lib/assets/GHOST.jpg",
+
                 ),
-                SizedBox(height: 40),
-
-                Text('Create Your Account',
-
-                 style: TextStyle(fontFamily: 'SofiaProLight',
-                     fontSize: 22 ,
-                     fontWeight: FontWeight.w300,
-                     foreground: Paint()
-                       ..color = Colors.white
-                       ..strokeWidth = 1
-                       ..style = PaintingStyle.stroke,
-                 ),
-                ),
-                SizedBox(height: 40),
-                Container(
-                  height:460,
-                 width: 320,
-                 decoration: BoxDecoration(
-                   borderRadius: BorderRadius.circular(20),
-                   boxShadow: [
-                     BoxShadow(
-                       color: Colors.white.withOpacity(1),
-                     )
-                   ],
-
-                 image: DecorationImage(
-                 image: AssetImage("lib/assets/image.png"),
-
-                      fit: BoxFit.cover,
-
-                  ),
-                 ),
-
-
-                child: Column(
-                  children: [
+                fit: BoxFit.fill,
+              ),
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: 100),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:[
+                    Container(
+                      alignment: Alignment.center,
+                      child: Container(
+                        child: Image.asset('lib/assets/logokawaii.png'),
+                        height: 100,
+                      ),
+                    ),
                     SizedBox(height: 40),
 
-                    Text('Username',
+                    Text('Create Your Account',
 
                       style: TextStyle(fontFamily: 'SofiaProLight',
-                        fontSize: 18 ,
+                        fontSize: 22 ,
                         fontWeight: FontWeight.w300,
                         foreground: Paint()
                           ..color = Colors.white
@@ -79,66 +47,116 @@ class Register extends StatelessWidget {
                           ..style = PaintingStyle.stroke,
                       ),
                     ),
-                    TextFieldContainer(child: TextField()),
-                    SizedBox(height: 10),
+                    SizedBox(height: 40),
+                    Container(
+                      height:460,
+                      width: 320,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(1),
+                          )
+                        ],
 
-                    Text('E-mail',
+                        image: DecorationImage(
+                          image: AssetImage("lib/assets/image.png"),
 
-                      style: TextStyle(fontFamily: 'SofiaProLight',
-                        fontSize: 18 ,
-                        fontWeight: FontWeight.w300,
-                        foreground: Paint()
-                          ..color = Colors.white
-                          ..strokeWidth = 1
-                          ..style = PaintingStyle.stroke,
+                          fit: BoxFit.cover,
+
+                        ),
                       ),
-                    ),
 
-                    TextFieldContainer(child: TextField(
-                  obscureText: true,
-                )
+
+                      child: Column(
+                          children: [
+                            SizedBox(height: 40),
+
+                            Text('Username',
+
+                              style: TextStyle(fontFamily: 'SofiaProLight',
+                                fontSize: 18 ,
+                                fontWeight: FontWeight.w300,
+                                foreground: Paint()
+                                  ..color = Colors.white
+                                  ..strokeWidth = 1
+                                  ..style = PaintingStyle.stroke,
+                              ),
+                            ),
+                            TextFieldContainer(child: TextField()),
+                            SizedBox(height: 5),
+
+                            Text('E-mail',
+
+                              style: TextStyle(fontFamily: 'SofiaProLight',
+                                fontSize: 18 ,
+                                fontWeight: FontWeight.w300,
+                                foreground: Paint()
+                                  ..color = Colors.white
+                                  ..strokeWidth = 1
+                                  ..style = PaintingStyle.stroke,
+                              ),
+                            ),
+
+                            TextFieldContainer(child: TextField(
+                            )
+                            ),
+                            SizedBox(height: 5),
+
+                            Text('Password',
+
+                              style: TextStyle(fontFamily: 'SofiaProLight',
+                                fontSize: 18 ,
+                                fontWeight: FontWeight.w300,
+                                foreground: Paint()
+                                  ..color = Colors.white
+                                  ..strokeWidth = 1
+                                  ..style = PaintingStyle.stroke,
+                              ),
+                            ),
+
+                            TextFieldContainer(child: TextField(
+
+                              obscureText: true,
+                            )
+                            ),
+                            GestureDetector(
+                                onHorizontalDragEnd: (DragEndDetails details){
+                                  if (details.primaryVelocity! > 0) {
+                                    // User swiped Left
+                                  }
+                                  else if (details.primaryVelocity! < 0) {
+                                    // User swiped Right
+                                  }
+                                },
+                                child: Image.asset("lib/assets/swipelogo.png", height: 40,width: 40,)
+                            ),
+                            SizedBox(height: 10,),
+                            Text('Swipe right to register',
+
+                              style: TextStyle(fontFamily: 'SofiaProLight',
+                                fontSize: 18 ,
+                                fontWeight: FontWeight.w300,
+                                foreground: Paint()
+                                  ..color = Colors.white
+                                  ..strokeWidth = 1
+                                  ..style = PaintingStyle.stroke,
+                              ),
+                            ),
+
+                          ]
                       ),
-                    SizedBox(height: 10),
 
-                    Text('Password',
+                    )],
 
-                      style: TextStyle(fontFamily: 'SofiaProLight',
-                        fontSize: 18 ,
-                        fontWeight: FontWeight.w300,
-                        foreground: Paint()
-                          ..color = Colors.white
-                          ..strokeWidth = 1
-                          ..style = PaintingStyle.stroke,
-                      ),
-                    ),
 
-                    TextFieldContainer(child: TextField(
 
-                      obscureText: true,
-                    )
-                    ),
-                    GestureDetector(
-                        onHorizontalDragEnd: (DragEndDetails details){
-                            if (details.primaryVelocity! > 0) {
-                              // User swiped Left
-                              }
-                            else if (details.primaryVelocity! < 0) {
-                             // User swiped Right
-                            }
-                            },
-                       child: Image.asset("lib/assets/swipelogo.png", height: 50,width: 50,)
                 ),
-                  ]
+              ],
             ),
-
-    )],
-
-
-
-            ),
-          ],
+          )],
         ),
-      ),
+      
     );
   }
 }
@@ -169,6 +187,5 @@ class TextFieldContainer extends StatelessWidget {
       child: child,
     );
   }
-
 }
 
