@@ -28,7 +28,9 @@ namespace Pfe.ChatbotApi.Controllers
         private readonly IConfiguration _configuration;
 
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public SecurityController(IConfiguration configuration, DataContext context)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _context = context;
             _configuration = configuration;
@@ -62,7 +64,9 @@ namespace Pfe.ChatbotApi.Controllers
                 }
                 var issuer = _configuration["Jwt:Issuer"];
                 var audience = _configuration["Jwt:Audience"];
+#pragma warning disable CS8604 // Possible null reference argument.
                 var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+#pragma warning restore CS8604 // Possible null reference argument.
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new[]
