@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Google.Apis.Auth;
+using Azure.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,20 +26,24 @@ namespace Pfe.ChatbotApi.Controllers
         private string idToken;
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
+
+
         public SecurityController(IConfiguration configuration, DataContext context)
         {
             _context = context;
-
             _configuration = configuration;
+
         }
 
         //// POST api/<SecurityController>
         [AllowAnonymous]
         [HttpPost("token")]
-        public async Task<ActionResult> PostAsync([FromBody] Login login)
+        public async Task<IActionResult> PostAsync([FromBody] Login login)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == login.Email && x.Password == login.Password);
-             if (login.Provider == "Facebook" || login.Provider == "Google")
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(login.Password);
+
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == login.Email);
+            if (login.Provider == "Facebook" || login.Provider == "Google")
             { if (login.Provider == "Google")
                 {
                     GoogleJsonWebSignature.Payload payload;
@@ -77,11 +82,21 @@ namespace Pfe.ChatbotApi.Controllers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var jwtToken = tokenHandler.WriteToken(token);
                 var stringToken = tokenHandler.WriteToken(token);
+                string password2
+                 = BCrypt.Net.BCrypt.HashPassword(login.Password);
+                user.Password = password2;
+                user.Email = login.Email;
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+
+              
                 return Ok(stringToken);
             }
 
 
-            else if (user != null)
+            else if (user != null && BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
+
             {
                 // Authenticate with username and password and generate JWT token
                 var issuer = _configuration["Jwt:Issuer"];

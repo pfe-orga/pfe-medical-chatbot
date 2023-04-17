@@ -6,6 +6,8 @@ namespace Pfe.ChatbotApi.Core
     [Table("user")]
     public class User
     {
+        internal readonly object password;
+
         [Key, Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
