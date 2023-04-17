@@ -9,10 +9,10 @@ import '../di/service_locator.dart';
 class HomeController {
   final WfApi wfApi;
 
-  HomeController(this.wfApi);
+  HomeController({required this.wfApi});
 
   // --------------- Repository -------------
-  final userRepository = getIt.get<UserRepository>();
+  // final userRepository = getIt.get<UserRepository>();
 
   // -------------- Textfield Controller ---------------
   final usernameController = TextEditingController();

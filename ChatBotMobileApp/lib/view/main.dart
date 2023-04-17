@@ -3,10 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:pfemedicalchatbotapp/view/firstscreen.dart';
 import 'package:pfemedicalchatbotapp/view/register.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:pfemedicalchatbotapp/view/test.dart';
 
+import '../di/service_locator.dart';
 import 'login.dart';
 
-void main() {
+Future<void> main() async {
+  await setup();
+
+
   runApp(const MyApp());
 }
 
@@ -18,7 +26,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home:   FirstScreen(),
+      home:   HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }

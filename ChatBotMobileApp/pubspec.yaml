@@ -29,9 +29,18 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  get_it: any
+  injectable: any
+  intl: any
   get:
+  http:
+  dio: any
+  shared_preferences: any
+  freezed_annotation: ^2.2.0
+  retrofit: any
   flutter:
     sdk: flutter
+  email_validator: any
   fullscreen: ^1.0.3
 
 
@@ -41,6 +50,10 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  retrofit_generator: any
+  build_runner: any
+  freezed: ^2.3.2
+  injectable_generator: any
   flutter_test:
     sdk: flutter
 
