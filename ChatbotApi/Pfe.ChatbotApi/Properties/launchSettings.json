@@ -3,11 +3,21 @@
     "Pfe.ChatbotApi": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:50524",
-      "launchUrl": "swagger"
+      "applicationUrl": "https://localhost:50523;http://localhost:50524"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "launchBrowser": true,
+      "launchUrl": "https://localhost:50523/swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "https://localhost:50523;http://localhost:50524"
+      },
+      "distributionName": ""
     }
   }
 }
