@@ -5,7 +5,7 @@ import 'package:pfemedicalchatbotapp/controllers/HomeController.dart';
 
 import '../data/network/api/dio_client.dart';
 import '../data/network/api/user/user_api.dart';
-import '../data/network/api/user/weatherforcastapi.dart';
+import '../data/network/api/user/weather_forcast_api.dart';
 
 final getIt = GetIt.instance;
 
