@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../models/LoginModel.dart';
 import '../../../models/UserModel.dart';
 import '../dio_client.dart';
 
@@ -32,10 +33,10 @@ class UserApi {
     }
   }
 
-  login() async {
+  login(LoginModel loginModel) async {
     try {
-      final response = await dioClient.post("${Endpoints.SecurityEndpoints}/me");
-      return UserModel.fromJson(response.data);
+      final response = await dioClient.post("${Endpoints.SecurityEndpoints}/token",data: loginModel.toJson());
+      return LoginModel.fromJson(response.data);
     } on DioError catch (e) {
       print(e);
       rethrow;

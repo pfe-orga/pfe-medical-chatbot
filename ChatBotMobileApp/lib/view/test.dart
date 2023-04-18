@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfemedicalchatbotapp/controllers/LoginController.dart';
 import '../controllers/HomeController.dart';
 import '../data/models/WeatherModel.dart';
 import '../dependency_injection/service_locator.dart';
@@ -51,6 +52,7 @@ class HomePage extends StatelessWidget {
 class AddWeatherBtn extends StatelessWidget {
    AddWeatherBtn({Key? key}) : super(key: key);
   final homeController = getIt<HomeController>();
+  final loginController = getIt<LoginController>();
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +85,7 @@ class AddWeatherBtn extends StatelessWidget {
                 ElevatedButton(onPressed: (){
                   homeController.getWfs();
                   homeController.me();
+                  loginController.login();
                 },
                     child: const Text('submit'))
 

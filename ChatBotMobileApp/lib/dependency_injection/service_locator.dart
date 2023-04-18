@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pfemedicalchatbotapp/controllers/HomeController.dart';
 
+import '../controllers/LoginController.dart';
 import '../data/network/api/dio_client.dart';
 import '../data/network/api/user/user_api.dart';
 import '../data/network/api/user/weather_forcast_api.dart';
@@ -16,5 +17,6 @@ Future<void> setup() async {
   getIt.registerSingleton(UserApi(dioClient: getIt<DioClient>()));
   getIt.registerSingleton(WfApi(dioClient: getIt<DioClient>()));
   getIt.registerSingleton(HomeController(userApi: getIt<UserApi>(), wfApi: getIt<WfApi>()));
+  getIt.registerSingleton(LoginController(userApi: getIt<UserApi>(), wfApi: getIt<WfApi>()));
 
 }

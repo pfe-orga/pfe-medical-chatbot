@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pfemedicalchatbotapp/data/network/api/user/weather_forcast_api.dart';
-
+import '../data/models/LoginModel.dart';
 import '../data/models/UserModel.dart';
-import '../data/models/WeatherModel.dart';
 import '../data/network/api/user/user_api.dart';
 
 class LoginController {
@@ -39,11 +38,12 @@ class LoginController {
     return await userApi.me();
   }
 
-  Future<String> login() async {
-    var wf =  await userApi.login();
-    return (wf.data as List)
-        .map((e) => WeatherModel.fromJson(e))
-        .toList();
+  Future<bool> login() async {
+    var login = LoginModel(Username:usernameController.text, Password: passwordController.text );
+    print(login);
+    var token =  await userApi.login(login);
+    print(token);
+    return token != null ? true : false;
   }
 
   // Future<NewUser> addNewUser() async {
