@@ -15,7 +15,6 @@ Future<void> setup() async {
 
   getIt.registerSingleton(UserApi(dioClient: getIt<DioClient>()));
   getIt.registerSingleton(WfApi(dioClient: getIt<DioClient>()));
-  getIt.registerSingleton(UserRepository(userApi: getIt<UserApi>()));
-  getIt.registerSingleton(HomeController(wfApi: getIt<WfApi>()));
+  getIt.registerSingleton(HomeController(userApi: getIt<UserApi>(), wfApi: getIt<WfApi>()));
 
 }

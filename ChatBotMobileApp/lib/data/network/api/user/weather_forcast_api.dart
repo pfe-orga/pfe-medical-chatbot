@@ -1,6 +1,6 @@
 import '../dio_client.dart';
 import 'package:dio/dio.dart';
-import '../../../models/weatherModel.dart';
+import '../../../models/WeatherModel.dart';
 class WfApi {
   final DioClient dioClient;
 

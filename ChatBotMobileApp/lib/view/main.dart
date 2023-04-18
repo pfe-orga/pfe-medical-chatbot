@@ -8,13 +8,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pfemedicalchatbotapp/view/test.dart';
 
-import '../di/service_locator.dart';
+import '../dependency_injection/service_locator.dart';
 import 'login.dart';
 
 Future<void> main() async {
   await setup();
-
-
   runApp(const MyApp());
 }
 

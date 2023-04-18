@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:pfemedicalchatbotapp/data/network/api/user/weatherforcastapi.dart';
+import 'package:pfemedicalchatbotapp/data/network/api/user/weather_forcast_api.dart';
 
 import '../data/models/UserModel.dart';
-import '../data/models/weatherModel.dart';
+import '../data/models/WeatherModel.dart';
 import '../data/network/api/user/user_api.dart';
-import '../di/service_locator.dart';
 
 class HomeController {
   final WfApi wfApi;
+  final UserApi userApi;
 
-  HomeController({required this.wfApi});
+  HomeController({required this.userApi, required this.wfApi});
 
   // --------------- Repository -------------
   // final userRepository = getIt.get<UserRepository>();
@@ -32,8 +32,7 @@ class HomeController {
   // -------------- Methods ---------------
 
   Future<List<UserModel>> getUsers() async {
-    final users = await userRepository.getUsersRequested();
-    return users;
+    return await userApi.getUsers();
   }
 
   Future<List<WeatherModel>> getWfs() async {
@@ -43,31 +42,31 @@ class HomeController {
         .toList();
   }
 
-  Future<NewUser> addNewUser() async {
-    final newlyAddedUser = await userRepository.addNewUserRequested(
-      usernameController.text,
-      emailController.text,
-      passwordController.text,
-    );
-    newUsers.add(newlyAddedUser);
-    return newlyAddedUser;
-  }
-
-  Future<NewUser> updateUser(int id, String username,String email, String password) async {
-    final updatedUser = await userRepository.updateUserRequested(
-      id,
-      username,
-      email,
-      password
-    );
-    newUsers[id] = updatedUser;
-    return updatedUser;
-  }
-
-  Future<void> deleteNewUser(int id) async {
-    await userRepository.deleteNewUserRequested(id);
-    newUsers.removeAt(id);
-  }
+  // Future<NewUser> addNewUser() async {
+  //   final newlyAddedUser = await userRepository.addNewUserRequested(
+  //     usernameController.text,
+  //     emailController.text,
+  //     passwordController.text,
+  //   );
+  //   newUsers.add(newlyAddedUser);
+  //   return newlyAddedUser;
+  // }
+  //
+  // Future<NewUser> updateUser(int id, String username,String email, String password) async {
+  //   final updatedUser = await userRepository.updateUserRequested(
+  //     id,
+  //     username,
+  //     email,
+  //     password
+  //   );
+  //   newUsers[id] = updatedUser;
+  //   return updatedUser;
+  // }
+  //
+  // Future<void> deleteNewUser(int id) async {
+  //   await userRepository.deleteNewUserRequested(id);
+  //   newUsers.removeAt(id);
+  // }
 
 }
 

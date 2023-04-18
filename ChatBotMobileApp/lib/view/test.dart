@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../controllers/HomeController.dart';
-import '../data/models/weatherModel.dart';
-import '../di/service_locator.dart';
+import '../data/models/WeatherModel.dart';
+import '../dependency_injection/service_locator.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
