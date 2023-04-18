@@ -111,7 +111,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "http://localhost:15145/";
+  static const String baseUrl = "http://localhost:50524/";
 
   // receiveTimeout
   static const int receiveTimeout = 15000;
@@ -122,6 +122,7 @@ class Endpoints {
   static const String Users = 'Users';
   static const String weatherForecast = 'WeatherForecast';
   static const String postsEndpoints = 'posts';
+  static const String SecurityEndpoints = 'Security';
 
 }
 

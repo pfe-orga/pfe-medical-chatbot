@@ -35,6 +35,10 @@ class HomeController {
     return await userApi.getUsers();
   }
 
+  Future<UserModel> me() async {
+    return await userApi.me();
+  }
+
   Future<List<WeatherModel>> getWfs() async {
     var wf =  await wfApi.getWF();
     return (wf.data as List)

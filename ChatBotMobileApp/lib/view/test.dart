@@ -78,7 +78,14 @@ class AddWeatherBtn extends StatelessWidget {
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: "Password"),
             )
-          )
+
+          ),
+                ElevatedButton(onPressed: (){
+                  homeController.getWfs();
+                  homeController.me();
+                },
+                    child: const Text('submit'))
+
 
               ],
 

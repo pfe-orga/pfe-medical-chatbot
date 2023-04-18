@@ -21,6 +21,27 @@ class UserApi {
 
     }
   }
+
+  Future<UserModel> me() async {
+    try {
+      final response = await dioClient.get("${Endpoints.SecurityEndpoints}/me");
+      return UserModel.fromJson(response.data);
+    } on DioError catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  login() async {
+    try {
+      final response = await dioClient.post("${Endpoints.SecurityEndpoints}/me");
+      return UserModel.fromJson(response.data);
+    } on DioError catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   //
   // Future<NewUser> addNewUser(String username, String email, String password) async {
   //   try {

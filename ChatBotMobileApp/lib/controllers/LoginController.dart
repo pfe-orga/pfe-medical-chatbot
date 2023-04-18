@@ -5,11 +5,11 @@ import '../data/models/UserModel.dart';
 import '../data/models/WeatherModel.dart';
 import '../data/network/api/user/user_api.dart';
 
-class HomeController {
+class LoginController {
   final WfApi wfApi;
   final UserApi userApi;
 
-  HomeController({required this.userApi, required this.wfApi});
+  LoginController({required this.userApi, required this.wfApi});
 
   // --------------- Repository -------------
   // final userRepository = getIt.get<UserRepository>();
@@ -39,8 +39,8 @@ class HomeController {
     return await userApi.me();
   }
 
-  Future<List<WeatherModel>> getWfs() async {
-    var wf =  await wfApi.getWF();
+  Future<String> login() async {
+    var wf =  await userApi.login();
     return (wf.data as List)
         .map((e) => WeatherModel.fromJson(e))
         .toList();

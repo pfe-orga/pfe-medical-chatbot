@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Pfe.ChatbotApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class SecurityController : ControllerBase
     {
@@ -69,6 +69,14 @@ namespace Pfe.ChatbotApi.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        [Authorize]
+        // DELETE api/<SecurityController>/5
+        [HttpGet("me")]
+        public ActionResult Me()
+        {
+            return Ok("Hello it's me");
         }
     }
 }
