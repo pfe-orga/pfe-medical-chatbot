@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:pfemedicalchatbotapp/view/register.dart';
+import 'package:http/http.dart' as http;
 
 import 'login.dart';
+
 
 class FirstScreen extends StatelessWidget {
   const FirstScreen({Key? key}) : super(key: key);
@@ -95,7 +97,7 @@ class FirstScreen extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            Get.to(Register());
+                            Get.to( Register());
                           },
                         ),
                         SizedBox(height: 20),
@@ -106,9 +108,6 @@ class FirstScreen extends StatelessWidget {
                   ),
 
                 )],
-
-
-
             ),
           ],
         ),
@@ -236,7 +235,6 @@ buildSocialBtnRow() {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // IconButton(onPressed: (){}, icon: Image.asset('lib/assets/fblogo.png'))
-
         // Image.asset('lib/assets/fblogo.png',width: 60,height: 60,),
         // Image.asset('lib/assets/googlelogo.png',width: 60,height: 60,),
         InkWell(
@@ -259,3 +257,15 @@ buildSocialBtnRow() {
   );
 
   }
+//
+// Future<void> getWeatherForcast() async {
+//   var client = new http.Client();
+//   try {
+//     print(await client.get(https://flutter.dev/"));
+//   }
+//   catch(ex) {
+//     print(ex);
+//   }finally {
+//     client.close();
+//   }
+// }

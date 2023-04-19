@@ -12,6 +12,8 @@ using Pfe.ChatbotApi.Services.Classes;
 using Pfe.ChatbotApi.Services.Interfaces;
 using System.Text;
 
+var MyAllowSpecificOrigins = "AllowAll";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,6 +21,19 @@ builder.Services.AddDbContext<DataContext>
     (options =>options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
 builder.Services.AddScoped<IUserService, UserService>();
 
+
+builder.Services.AddCors(options =>
+ {
+     options.AddPolicy(MyAllowSpecificOrigins,
+         builder =>
+         {
+             builder
+             .AllowAnyOrigin()
+             .AllowAnyMethod()
+             .AllowAnyHeader();
+             //.AllowCredentials();
+         });
+ });
 
 builder.Services.AddAuthentication(options =>
 {
@@ -75,11 +90,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseCors(MyAllowSpecificOrigins);
 app.MapControllers();
 
 app.Run();
