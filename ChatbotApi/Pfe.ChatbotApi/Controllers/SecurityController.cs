@@ -14,6 +14,7 @@ using System.Text;
 using Google.Apis.Auth;
 using Azure.Core;
 using Microsoft.AspNetCore.Identity;
+using Pfe.ChatbotApi.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,12 +27,14 @@ namespace Pfe.ChatbotApi.Controllers
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IdentityService _identityService;
 
 
-        public SecurityController(IConfiguration configuration, DataContext context)
+        public SecurityController(IConfiguration configuration, DataContext context, IdentityService identityService)
         {
             _context = context;
             _configuration = configuration;
+            _identityService = identityService;
         }
 
         //// POST api/<SecurityControllerpasswordHash
@@ -130,12 +133,15 @@ namespace Pfe.ChatbotApi.Controllers
             return Unauthorized("invalid user or pwd");
         }
 
-
         [HttpPost("register")]
         public ActionResult<User> Register(UserRequest request)
         {
-            string password
-                 = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var existingUser = _context.Users.FirstOrDefault(u => u.Email == request.Email);
+            if (existingUser != null)
+            {
+                return BadRequest("User with same email already exists");
+            }
+            string password  = BCrypt.Net.BCrypt.HashPassword(request.Password);
             var user = new User
             {
                 Name = request.Name,
@@ -148,6 +154,7 @@ namespace Pfe.ChatbotApi.Controllers
 
             return Ok(user);
         }
+
         [Authorize]
         // PUT api/<SecurityController>/5
         [HttpPut("{id}")]
@@ -156,18 +163,16 @@ namespace Pfe.ChatbotApi.Controllers
         }
 
         [Authorize]
-        // DELETE api/<SecurityController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }
 
         [Authorize]
-        // DELETE api/<SecurityController>/5
         [HttpGet("me")]
         public ActionResult Me()
         {
-            return Ok("Hello it's me");
+            return Ok(_identityService.ConnectedUser);
         }
     }
 }

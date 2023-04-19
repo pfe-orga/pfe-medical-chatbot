@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Pfe.ChatbotApi.Core;
+using Pfe.ChatbotApi.Services;
 using Pfe.ChatbotApi.Services.Classes;
 using Pfe.ChatbotApi.Services.Interfaces;
 using System.Text;
@@ -20,6 +21,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>
     (options =>options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IdentityService>();
+builder.Services.AddHttpContextAccessor();
 
 
 builder.Services.AddCors(options =>
@@ -53,25 +56,25 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = false,
         ValidateIssuerSigningKey = true
     };
-}).AddGoogle(options =>
-{
-    options.ClientId = builder.Configuration["Google:ClientId"];
-    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+//}).AddGoogle(options =>
+//{
+//    options.ClientId = builder.Configuration["Google:ClientId"];
+//    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
 });
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme; 
-})
-   .AddCookie()
-   .AddFacebook(options =>
-   {
-       options.AppId = builder.Configuration["Facebook:AppId"];
-       options.AppSecret = builder.Configuration["Facebook:AppSecret"];
-   });
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme; 
+//})
+//   .AddCookie()
+//   .AddFacebook(options =>
+//   {
+//       options.AppId = builder.Configuration["Facebook:AppId"];
+//       options.AppSecret = builder.Configuration["Facebook:AppSecret"];
+//   });
 
 
    

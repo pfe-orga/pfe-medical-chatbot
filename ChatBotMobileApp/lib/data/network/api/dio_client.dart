@@ -131,6 +131,7 @@ class Endpoints {
   static const String postsEndpoints = 'posts';
   static const String SecurityEndpoints = 'Security';
 
+
 }
 
 
