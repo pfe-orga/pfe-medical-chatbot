@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using Google.Apis.Auth;
 using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,8 +24,6 @@ namespace Pfe.ChatbotApi.Controllers
     public class SecurityController : ControllerBase
 
     {
-        public static User user = new User();
-        private string idToken;
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
 
@@ -40,12 +39,10 @@ namespace Pfe.ChatbotApi.Controllers
         [HttpPost("token")]
         public async Task<IActionResult> PostAsync([FromBody] Login login)
         {
-            //string passwordHash = BCrypt.Net.BCrypt.HashPassword(login.Password);
-
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == login.Email);
-            if (login.Provider == "Facebook" || login.Provider == "Google")
+            if (login.Provider == "facebook" || login.Provider == "google")
             {
-                if (login.Provider == "Google")
+                if (login.Provider == "google")
                 {
                     GoogleJsonWebSignature.Payload payload;
                     try
@@ -54,7 +51,7 @@ namespace Pfe.ChatbotApi.Controllers
                         {
                             Audience = new[] { _configuration["Google:ClientId"] }
                         };
-                        payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+                        //payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
                     }
                     catch (InvalidJwtException)
                     {
@@ -134,17 +131,17 @@ namespace Pfe.ChatbotApi.Controllers
         }
 
 
-
-
-
         [HttpPost("register")]
         public ActionResult<User> Register(UserRequest request)
         {
             string password
                  = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            user.Name = request.Name;
-            user.Password = password;
-            user.Email = request.Email;
+            var user = new User
+            {
+                Name = request.Name,
+                Password = password,
+                Email = request.Email
+            };
             _context.Users.Add(user);
             _context.SaveChanges();
 

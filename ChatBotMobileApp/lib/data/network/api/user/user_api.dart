@@ -36,7 +36,7 @@ class UserApi {
   login(LoginModel loginModel) async {
     try {
       final response = await dioClient.post("${Endpoints.SecurityEndpoints}/token",data: loginModel.toJson());
-      return LoginModel.fromJson(response.data);
+      return response.data;
     } on DioError catch (e) {
       print(e);
       rethrow;

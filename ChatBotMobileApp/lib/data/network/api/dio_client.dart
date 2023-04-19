@@ -1,14 +1,21 @@
 import 'package:dio/dio.dart';
 
+import 'interceptors.dart';
+
 class DioClient {
 // dio instance
-  final Dio _dio;
+  final Dio _dio ;
+  final DioInterceptor dioInterceptor;
 
-  DioClient(this._dio) {
+  Dio get dio => _dio;
+
+  DioClient(this._dio, this.dioInterceptor) {
+    _dio.interceptors.add(dioInterceptor);
+
     _dio
       ..options.baseUrl = Endpoints.baseUrl
-      ..options.connectTimeout = const Duration(microseconds: Endpoints.connectionTimeout )
-      ..options.receiveTimeout = const Duration(microseconds: Endpoints.receiveTimeout )
+      ..options.connectTimeout = Endpoints.connectionTimeout
+      ..options.receiveTimeout = Endpoints.receiveTimeout
       ..options.responseType = ResponseType.json;
   }
   // Get:-----------------------------------------------------------------------

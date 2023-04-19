@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:pfemedicalchatbotapp/view/register.dart';
 import 'package:http/http.dart' as http;
-import 'package:pfemedicalchatbotapp/view/test.dart';
 
 import 'login.dart';
 

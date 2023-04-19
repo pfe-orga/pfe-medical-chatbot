@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:pfemedicalchatbotapp/data/network/api/user/weather_forcast_api.dart';
 import '../data/models/LoginModel.dart';
 import '../data/models/UserModel.dart';
 import '../data/network/api/user/user_api.dart';
+import '../data/sharedprefs/shared_resources_service.dart';
 
 class LoginController {
   final WfApi wfApi;
   final UserApi userApi;
+  final SharedResourcesService sharedResourcesService;
 
-  LoginController({required this.userApi, required this.wfApi});
+
+  LoginController({required this.userApi, required this.wfApi, required this.sharedResourcesService});
 
   // --------------- Repository -------------
   // final userRepository = getIt.get<UserRepository>();
@@ -39,11 +43,19 @@ class LoginController {
   }
 
   Future<bool> login() async {
-    var login = LoginModel(Username:usernameController.text, Password: passwordController.text );
-    print(login);
+    var login = LoginModel(Email:emailController.text, Password: passwordController.text );
+    print('email : ${login.Email}');
+    print('pwd: ${login.Password}');
     var token =  await userApi.login(login);
-    print(token);
+    sharedResourcesService.setUserToken(userToken: token);
+    print('token: ${token}');
     return token != null ? true : false;
+  }
+
+  void init() {
+    if(sharedResourcesService.getUserToken() != null){
+      // redirection
+    }
   }
 
   // Future<NewUser> addNewUser() async {

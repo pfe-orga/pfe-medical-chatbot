@@ -6,7 +6,6 @@ import 'package:pfemedicalchatbotapp/view/register.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:pfemedicalchatbotapp/view/test.dart';
 
 import '../dependency_injection/service_locator.dart';
 import 'login.dart';
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home:   HomePage(),
+      home:   Login(),
       debugShowCheckedModeBanner: false,
     );
   }

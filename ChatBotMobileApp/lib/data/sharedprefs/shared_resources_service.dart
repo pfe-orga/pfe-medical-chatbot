@@ -1,17 +1,14 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:localstorage/localstorage.dart';
 
-class SharedPreferenceHelper {
+class SharedResourcesService {
   static const String token = "TOKEN";
-  final SharedPreferences prefs;
-
-  SharedPreferenceHelper({required this.prefs});
+  final LocalStorage storage = LocalStorage('authorization');
 
   Future<void> setUserToken({required String userToken}) async {
-    await prefs.setString(token, userToken);
+    await storage.setItem(token, userToken);
   }
 
   String? getUserToken() {
-    final userToken = prefs.getString(token);
-    return userToken;
+    return storage.getItem(token);
   }
 }
