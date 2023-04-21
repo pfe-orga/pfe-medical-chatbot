@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using Google.Apis.Auth;
 using Azure.Core;
+using System.Text.RegularExpressions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,7 +38,7 @@ namespace Pfe.ChatbotApi.Controllers
 
         //// POST api/<SecurityController>
         [AllowAnonymous]
-        [HttpPost("token")]
+        [HttpPost("Login")]
         public async Task<IActionResult> PostAsync([FromBody] Login login)
         {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(login.Password);
@@ -130,32 +131,71 @@ namespace Pfe.ChatbotApi.Controllers
            
            
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public ActionResult<User> Register(UserRequest request)
         {
-            string password
-                 = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            user.Name = request.Name;
-            user.Password = password;
-            user.Email = request.Email;
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            var passwordRegex = new Regex(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$");
+            var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+
+            if (!emailRegex.IsMatch(request.Email))
+            {
+                return BadRequest("Invalid email address");
+            }
+
+            if (!passwordRegex.IsMatch(request.Password))
+            {
+                return BadRequest("Invalid password");
+            }
+
+            if (emailRegex.IsMatch(request.Email) && passwordRegex.IsMatch(request.Password))
+            {
+                string password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+                user.Name = request.Name;
+                user.Password = password;
+                user.Email = request.Email;
+                _context.Users.Add(user);
+                _context.SaveChanges();
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest("Invalid email address and password");
+            }
 
 
-            return Ok(user);
         }
-        [Authorize]
-        // PUT api/<SecurityController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPost("Add")]
+        public async Task<User> AddUserAsync(User user)
         {
+            var savedUser = _context.Users.Add(user).Entity;
+            await _context.SaveChangesAsync();
+            return savedUser;
         }
 
-        [Authorize]
-        // DELETE api/<SecurityController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("Delete")]
+        public async Task<User> DeleteUserAsync(int id)
         {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("user not found");
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
+        [HttpGet("List")]
+        public List<User> List()
+        {
+            return _context.Users.ToList();
+        }
+
+        [HttpPut("Update")]
+        public async Task<User> UpdateUserAsync(User user)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id) ?? throw new Exception("user not found");
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return dbUser;
         }
     }
+
 }
+
