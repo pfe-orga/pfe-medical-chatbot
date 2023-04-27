@@ -13,17 +13,17 @@ using System.Security.Claims;
 using System.Text;
 using Google.Apis.Auth;
 using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Pfe.ChatbotApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class SecurityController : ControllerBase
 
-    {   public static User user = new User();
-        private string idToken;
+    {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
 
@@ -32,19 +32,17 @@ namespace Pfe.ChatbotApi.Controllers
         {
             _context = context;
             _configuration = configuration;
-
         }
 
-        //// POST api/<SecurityController>
+        //// POST api/<SecurityControllerpasswordHash
         [AllowAnonymous]
         [HttpPost("token")]
         public async Task<IActionResult> PostAsync([FromBody] Login login)
         {
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(login.Password);
-
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == login.Email);
-            if (login.Provider == "Facebook" || login.Provider == "Google")
-            { if (login.Provider == "Google")
+            if (login.Provider == "facebook" || login.Provider == "google")
+            {
+                if (login.Provider == "google")
                 {
                     GoogleJsonWebSignature.Payload payload;
                     try
@@ -53,7 +51,7 @@ namespace Pfe.ChatbotApi.Controllers
                         {
                             Audience = new[] { _configuration["Google:ClientId"] }
                         };
-                        payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+                        //payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
                     }
                     catch (InvalidJwtException)
                     {
@@ -67,11 +65,11 @@ namespace Pfe.ChatbotApi.Controllers
                 {
                     Subject = new ClaimsIdentity(new[]
                     {
-                new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, login.Email),
-                new Claim(JwtRegisteredClaimNames.Email, login.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
+                        new Claim("Id", Guid.NewGuid().ToString()),
+                        new Claim(JwtRegisteredClaimNames.Sub, login.Email),
+                        new Claim(JwtRegisteredClaimNames.Email, login.Email),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    }),
                     Expires = DateTime.UtcNow.AddDays(7),
                     Issuer = issuer,
                     Audience = audience,
@@ -82,21 +80,27 @@ namespace Pfe.ChatbotApi.Controllers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var jwtToken = tokenHandler.WriteToken(token);
                 var stringToken = tokenHandler.WriteToken(token);
-                string password2
-                 = BCrypt.Net.BCrypt.HashPassword(login.Password);
-                user.Password = password2;
-                user.Email = login.Email;
-                _context.Users.Add(user);
+                string password2 = BCrypt.Net.BCrypt.HashPassword(login.Password);
+                
+                if(user == null)
+                {
+                    _context.Users.Add(new Core.User
+                    {
+                        Email = login.Email,
+                        Password = password2
+                    });
+                }
+                else
+                {
+                    user.Password = password2;
+                    user.Email = login.Email;
+                }
                 _context.SaveChanges();
 
-
-              
                 return Ok(stringToken);
             }
 
-
             else if (user != null && BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
-
             {
                 // Authenticate with username and password and generate JWT token
                 var issuer = _configuration["Jwt:Issuer"];
@@ -106,11 +110,11 @@ namespace Pfe.ChatbotApi.Controllers
                 {
                     Subject = new ClaimsIdentity(new[]
                     {
-                new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, login.Email),
-                new Claim(JwtRegisteredClaimNames.Email, login.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
+                        new Claim("Id", Guid.NewGuid().ToString()),
+                        new Claim(JwtRegisteredClaimNames.Sub, login.Email),
+                        new Claim(JwtRegisteredClaimNames.Email, login.Email),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    }),
                     Expires = DateTime.UtcNow.AddDays(7),
                     Issuer = issuer,
                     Audience = audience,
@@ -126,18 +130,18 @@ namespace Pfe.ChatbotApi.Controllers
             return Unauthorized("invalid user or pwd");
         }
 
-       
-           
-           
 
         [HttpPost("register")]
         public ActionResult<User> Register(UserRequest request)
         {
             string password
                  = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            user.Name = request.Name;
-            user.Password = password;
-            user.Email = request.Email;
+            var user = new User
+            {
+                Name = request.Name,
+                Password = password,
+                Email = request.Email
+            };
             _context.Users.Add(user);
             _context.SaveChanges();
 
@@ -156,6 +160,14 @@ namespace Pfe.ChatbotApi.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        [Authorize]
+        // DELETE api/<SecurityController>/5
+        [HttpGet("me")]
+        public ActionResult Me()
+        {
+            return Ok("Hello it's me");
         }
     }
 }
