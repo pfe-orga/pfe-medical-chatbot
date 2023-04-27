@@ -155,19 +155,36 @@ namespace Pfe.ChatbotApi.Controllers
         {
         }
 
-        [Authorize]
-        // DELETE api/<SecurityController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPost("Add")]
+        public async Task<User> AddUserAsync(User user)
         {
+            var savedUser = _context.Users.Add(user).Entity;
+            await _context.SaveChangesAsync();
+            return savedUser;
         }
 
-        [Authorize]
-        // DELETE api/<SecurityController>/5
-        [HttpGet("me")]
-        public ActionResult Me()
+        [HttpDelete("Delete")]
+        public async Task<User> DeleteUserAsync(int id)
         {
-            return Ok("Hello it's me");
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("user not found");
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
+        [HttpGet("List")]
+        public List<User> List()
+        {
+            return _context.Users.ToList();
+        }
+
+        [HttpPut("Update")]
+        public async Task<User> UpdateUserAsync(User user)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id) ?? throw new Exception("user not found");
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return dbUser;
         }
     }
 }
