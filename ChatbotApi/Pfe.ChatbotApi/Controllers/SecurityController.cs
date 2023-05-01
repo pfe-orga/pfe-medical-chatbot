@@ -14,6 +14,7 @@ using System.Text;
 using Google.Apis.Auth;
 using Azure.Core;
 using Microsoft.AspNetCore.Identity;
+using System.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -96,7 +97,6 @@ namespace Pfe.ChatbotApi.Controllers
                     user.Email = login.Email;
                 }
                 _context.SaveChanges();
-
                 return Ok(stringToken);
             }
 
@@ -125,12 +125,32 @@ namespace Pfe.ChatbotApi.Controllers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var jwtToken = tokenHandler.WriteToken(token);
                 var stringToken = tokenHandler.WriteToken(token);
+
                 return Ok(stringToken);
             }
+
             return Unauthorized("invalid user or pwd");
         }
+        
+                [Authorize(Roles = "Patient")]
+                [HttpPut("{id}")]
+
+            public async Task<IActionResult> get(int id, [FromBody] Login login)
+        {
+            var user =  _context.Users.FirstOrDefaultAsync(x => x.Email == login.Email);
 
 
+            if (id == login.id)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest("Please provide a valid ID");
+            }
+
+        }
+        [AllowAnonymous]
         [HttpPost("register")]
         public ActionResult<User> Register(UserRequest request)
         {
@@ -141,20 +161,29 @@ namespace Pfe.ChatbotApi.Controllers
                 Name = request.Name,
                 Password = password,
                 Email = request.Email
-            };
+            }; 
+            if (request.Email == "sfaxi.malek@outlook.fr" || request.Email== "admin@example.com")
+            {
+                user.Role = "Admin";
+                
+            }else if(request.Role=="Admin"&& (request.Email != "sfaxi.malek@outlook.fr" || request.Email != "admin@example.com"))
+            {
+                return BadRequest("You don't have Permission");
+
+            }
+            else
+            {
+                user.Role = request.Role;
+            }
             _context.Users.Add(user);
             _context.SaveChanges();
 
 
             return Ok(user);
         }
-        [Authorize]
-        // PUT api/<SecurityController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add")]
         public async Task<User> AddUserAsync(User user)
         {
@@ -162,7 +191,7 @@ namespace Pfe.ChatbotApi.Controllers
             await _context.SaveChangesAsync();
             return savedUser;
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("Delete")]
         public async Task<User> DeleteUserAsync(int id)
         {
@@ -171,13 +200,13 @@ namespace Pfe.ChatbotApi.Controllers
             await _context.SaveChangesAsync();
             return user;
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("List")]
         public List<User> List()
         {
             return _context.Users.ToList();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("Update")]
         public async Task<User> UpdateUserAsync(User user)
         {
@@ -186,11 +215,12 @@ namespace Pfe.ChatbotApi.Controllers
             await _context.SaveChangesAsync();
             return dbUser;
         }
+        [Authorize(Roles = "Doctor , Admin")]
         [HttpGet("GetUserAsync")]
         public async Task<String> GetUserAsync(int Id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == Id) ?? throw new Exception("user not found");
-            String result = "Name: " + user.Name + "/n Email:" + user.Email;
+            String result = "Name: " + user.Name + "\n Email:" + user.Email;
             return result;
         }
     }

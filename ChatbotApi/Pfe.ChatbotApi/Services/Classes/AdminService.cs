@@ -49,7 +49,9 @@ namespace Pfe.ChatbotApi.Services.Classes
 
         Task<User> IUserService.GetUserAsync(int Id)
         {
-            throw new NotImplementedException();
+            var user =  _dataContext.Users.FirstOrDefaultAsync(x => x.Id == Id) ?? throw new Exception("user not found");
+
+            return user;
         }
     }
 }
