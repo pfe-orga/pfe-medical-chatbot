@@ -135,20 +135,6 @@ namespace Pfe.ChatbotApi.Controllers
             return Unauthorized("invalid user or pwd");
         }
 
-        [HttpPost("register")]
-        public ActionResult<User> Register(UserRequest request)
-        {
-            var existingUser = _context.Users.FirstOrDefault(u => u.Email == request.Email);
-            if (existingUser != null)
-            {
-                return BadRequest("User with same email already exists");
-            }
-            string password  = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            var user = new User
-
-
-
-
 
         [HttpPost("Register")]
         public ActionResult<User> Register(UserRequest request)
@@ -187,8 +173,6 @@ namespace Pfe.ChatbotApi.Controllers
 
         [Authorize]
         // PUT api/<SecurityController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
 
         [HttpPost("Add")]
         public async Task<User> AddUserAsync(User user)
@@ -199,8 +183,6 @@ namespace Pfe.ChatbotApi.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{id}")]
-        public void Delete(int id)
 
         [HttpDelete("Delete")]
         public async Task<User> DeleteUserAsync(int id)
@@ -216,22 +198,22 @@ namespace Pfe.ChatbotApi.Controllers
         public ActionResult Me()
         {
             return Ok(_identityService.ConnectedUser);
+        }
+            [HttpGet("List")]
+            public List<User> List()
+            {
+                return _context.Users.ToList();
+            }
 
-        [HttpGet("List")]
-        public List<User> List()
-        {
-            return _context.Users.ToList();
+            [HttpPut("Update")]
+            public async Task<User> UpdateUserAsync(User user)
+            {
+                var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id) ?? throw new Exception("user not found");
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+                return dbUser;
+            }
         }
 
-        [HttpPut("Update")]
-        public async Task<User> UpdateUserAsync(User user)
-        {
-            var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id) ?? throw new Exception("user not found");
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-            return dbUser;
-        }
-    }
-
-}
+    } 
 
