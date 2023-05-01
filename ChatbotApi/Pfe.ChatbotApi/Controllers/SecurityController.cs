@@ -13,7 +13,11 @@ using System.Security.Claims;
 using System.Text;
 using Google.Apis.Auth;
 using Azure.Core;
+using Microsoft.AspNetCore.Identity;
+using Pfe.ChatbotApi.Services;
+
 using System.Text.RegularExpressions;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,12 +32,14 @@ namespace Pfe.ChatbotApi.Controllers
         private string idToken;
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IdentityService _identityService;
 
 
-        public SecurityController(IConfiguration configuration, DataContext context)
+        public SecurityController(IConfiguration configuration, DataContext context, IdentityService identityService)
         {
             _context = context;
             _configuration = configuration;
+            _identityService = identityService;
 
         }
 
@@ -129,6 +135,17 @@ namespace Pfe.ChatbotApi.Controllers
             return Unauthorized("invalid user or pwd");
         }
 
+        [HttpPost("register")]
+        public ActionResult<User> Register(UserRequest request)
+        {
+            var existingUser = _context.Users.FirstOrDefault(u => u.Email == request.Email);
+            if (existingUser != null)
+            {
+                return BadRequest("User with same email already exists");
+            }
+            string password  = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var user = new User
+
 
 
 
@@ -166,6 +183,13 @@ namespace Pfe.ChatbotApi.Controllers
 
 
         }
+
+
+        [Authorize]
+        // PUT api/<SecurityController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+
         [HttpPost("Add")]
         public async Task<User> AddUserAsync(User user)
         {
@@ -173,6 +197,10 @@ namespace Pfe.ChatbotApi.Controllers
             await _context.SaveChangesAsync();
             return savedUser;
         }
+
+        [Authorize]
+        [HttpDelete("{id}")]
+        public void Delete(int id)
 
         [HttpDelete("Delete")]
         public async Task<User> DeleteUserAsync(int id)
@@ -182,6 +210,12 @@ namespace Pfe.ChatbotApi.Controllers
             await _context.SaveChangesAsync();
             return user;
         }
+
+        [Authorize]
+        [HttpGet("me")]
+        public ActionResult Me()
+        {
+            return Ok(_identityService.ConnectedUser);
 
         [HttpGet("List")]
         public List<User> List()

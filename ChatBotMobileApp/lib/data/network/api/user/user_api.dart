@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-
+import 'package:pfemedicalchatbotapp/data/models/RegistrationModel.dart';
 import '../../../models/LoginModel.dart';
 import '../../../models/UserModel.dart';
 import '../dio_client.dart';
@@ -42,8 +42,18 @@ class UserApi {
       rethrow;
     }
   }
+  register(RegistrationModel registrationModel) async {
+    try {
+      final response = await dioClient.post("${Endpoints.SecurityEndpoints}/register",data: registrationModel.toJson());
+      return response.data;
+    } on DioError catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
-  //
+
+//
   // Future<NewUser> addNewUser(String username, String email, String password) async {
   //   try {
   //     const newUser = {

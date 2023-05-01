@@ -1,203 +1,237 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:pfemedicalchatbotapp/controllers/RegistrationController.dart';
+
+import '../controllers/HomeController.dart';
+import '../dependency_injection/service_locator.dart';
 
 class Register extends StatefulWidget {
-  Register({Key? key}) : super(key: key);
+  const Register({Key? key}) : super(key: key);
 
   @override
   State<Register> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
+
+  final registerController = getIt<RegistrationController>();
+
+  final homeController = getIt<HomeController>();
+
   final _formKey = GlobalKey<FormState>();
+
   String _errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
+
+    final registerController = getIt<RegistrationController>();
+
     // mainAxisAlignment: MainAxisAlignment.start;
 
     // Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [Container(
-            decoration: BoxDecoration(
+        body: FutureBuilder<bool>(
 
-              image: DecorationImage(
-                image: AssetImage("lib/assets/GHOST.jpg",
-
+          builder: (context,snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              final error = snapshot.error;
+              return Center(
+                child: Text(
+                  "Error: " + error.toString(),
                 ),
-                fit: BoxFit.fill,
-              ),
-            ),
-            child: Form(
-              key: _formKey,
+              );
+            }
 
-              child: Column(
-                children: [
-                  SizedBox(height: 100),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children:[
-                      Container(
-                        alignment: Alignment.center,
-                        child: Container(
-                          child: Image.asset('lib/assets/logokawaii.png'),
-                          height: 100,
-                        ),
-                      ),
-                      SizedBox(height: 40),
+            return Container(
+              decoration: BoxDecoration(
 
-                      Text('Create Your Account',
-
-                        style: TextStyle(fontFamily: 'SofiaProLight',
-                          fontSize: 22 ,
-                          fontWeight: FontWeight.w300,
-                          foreground: Paint()
-                            ..color = Colors.white
-                            ..strokeWidth = 1
-                            ..style = PaintingStyle.stroke,
-                        ),
-                      ),
-                      SizedBox(height: 40),
-                      Container(
-                        height:460,
-                        width: 320,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white.withOpacity(1),
-                            )
-                          ],
-
-                          image: DecorationImage(
-                            image: AssetImage("lib/assets/image.png"),
-
-                            fit: BoxFit.cover,
-
-                          ),
-                        ),
-
-
-                        child: Column(
-                            children: [
-                              SizedBox(height: 40),
-
-                              Text('Username',
-
-                                style: TextStyle(fontFamily: 'SofiaProLight',
-                                  fontSize: 18 ,
-                                  fontWeight: FontWeight.w300,
-                                  foreground: Paint()
-                                    ..color = Colors.white
-                                    ..strokeWidth = 1
-                                    ..style = PaintingStyle.stroke,
-                                ),
-                              ),
-                              TextFieldContainer(child: TextFormField(
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your username';
-                                  }
-                                  return null;
-                                },
-                              )),
-                              SizedBox(height: 5),
-
-                              Text('E-mail',
-
-                                style: TextStyle(fontFamily: 'SofiaProLight',
-                                  fontSize: 18 ,
-                                  fontWeight: FontWeight.w300,
-                                  foreground: Paint()
-                                    ..color = Colors.white
-                                    ..strokeWidth = 1
-                                    ..style = PaintingStyle.stroke,
-                                ),
-                              ),
-
-                              TextFieldContainer(child: TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                onChanged: (val){
-                                  validateEmail(val);
-                                },
-
-                                // validator: (value) {
-                                //   if (value == null || value.isEmpty) {
-                                //     return 'Please enter your e-mail address';
-                                //   }
-                                //   return null;
-                                // },
-                              )
-                              ),
-                              SizedBox(height: 5),
-
-                              Text('Password',
-
-                                style: TextStyle(fontFamily: 'SofiaProLight',
-                                  fontSize: 18 ,
-                                  fontWeight: FontWeight.w300,
-                                  foreground: Paint()
-                                    ..color = Colors.white
-                                    ..strokeWidth = 1
-                                    ..style = PaintingStyle.stroke,
-                                ),
-                              ),
-
-                              TextFieldContainer(child: TextFormField(
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your password';
-                                  }
-                                  return null;
-                                },
-                                obscureText: true,
-                              )
-                              ),
-                              GestureDetector(
-                                onTap: (){
-                                  if (_formKey.currentState!.validate()) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Processing Data')),
-                                );
-                                }
-                                },
-                                  onHorizontalDragEnd: (DragEndDetails details){
-                                    if (details.primaryVelocity! > 0) {
-                                      // User swiped Left
-                                    }
-                                    else if (details.primaryVelocity! < 0) {
-                                      // User swiped Right
-                                    }
-                                  },
-                                  child: Image.asset("lib/assets/swipelogo.png", height: 40,width: 40,)
-                              ),
-                              SizedBox(height: 10,),
-                              Text('Swipe right to register',
-
-                                style: TextStyle(fontFamily: 'SofiaProLight',
-                                  fontSize: 18 ,
-                                  fontWeight: FontWeight.w300,
-                                  foreground: Paint()
-                                    ..color = Colors.white
-                                    ..strokeWidth = 1
-                                    ..style = PaintingStyle.stroke,
-                                ),
-                              ),
-
-                            ]
-                        ),
-
-                      )],
-
-
+                image: DecorationImage(
+                  image: AssetImage("lib/assets/GHOST.jpg",
 
                   ),
-                ],
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
-          )],
+              child: Form(
+                key: _formKey,
+
+                child: Column(
+                  children: [
+                    SizedBox(height: 100),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:[
+                        Container(
+                          alignment: Alignment.center,
+                          child: Container(
+                            child: Image.asset('lib/assets/logokawaii.png'),
+                            height: 100,
+                          ),
+                        ),
+                        SizedBox(height: 40),
+
+                        Text('Create Your Account',
+
+                          style: TextStyle(fontFamily: 'SofiaProLight',
+                            fontSize: 22 ,
+                            fontWeight: FontWeight.w300,
+                            foreground: Paint()
+                              ..color = Colors.white
+                              ..strokeWidth = 1
+                              ..style = PaintingStyle.stroke,
+                          ),
+                        ),
+                        SizedBox(height: 40),
+                        Container(
+                          height:460,
+                          width: 320,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(1),
+                              )
+                            ],
+
+                            image: DecorationImage(
+                              image: AssetImage("lib/assets/image.png"),
+
+                              fit: BoxFit.cover,
+
+                            ),
+                          ),
+
+
+                          child: Column(
+                              children: [
+                                SizedBox(height: 40),
+
+                                Text('Username',
+
+                                  style: TextStyle(fontFamily: 'SofiaProLight',
+                                    fontSize: 18 ,
+                                    fontWeight: FontWeight.w300,
+                                    foreground: Paint()
+                                      ..color = Colors.white
+                                      ..strokeWidth = 1
+                                      ..style = PaintingStyle.stroke,
+                                  ),
+                                ),
+                                TextFieldContainer(child: TextFormField(
+                                  controller: registerController.nameController,
+
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your username';
+                                    }
+                                    return null;
+                                  },
+                                )),
+                                SizedBox(height: 5),
+
+                                Text('E-mail',
+
+                                  style: TextStyle(fontFamily: 'SofiaProLight',
+                                    fontSize: 18 ,
+                                    fontWeight: FontWeight.w300,
+                                    foreground: Paint()
+                                      ..color = Colors.white
+                                      ..strokeWidth = 1
+                                      ..style = PaintingStyle.stroke,
+                                  ),
+                                ),
+
+                                TextFieldContainer(child: TextFormField(
+                                  controller: registerController.emailController,
+
+                                  keyboardType: TextInputType.emailAddress,
+                                  onChanged: (val){
+                                    validateEmail(val);
+                                  },
+
+                                  // validator: (value) {
+                                  //   if (value == null || value.isEmpty) {
+                                  //     return 'Please enter your e-mail address';
+                                  //   }
+                                  //   return null;
+                                  // },
+                                )
+                                ),
+                                SizedBox(height: 5),
+
+                                Text('Password',
+
+                                  style: TextStyle(fontFamily: 'SofiaProLight',
+                                    fontSize: 18 ,
+                                    fontWeight: FontWeight.w300,
+                                    foreground: Paint()
+                                      ..color = Colors.white
+                                      ..strokeWidth = 1
+                                      ..style = PaintingStyle.stroke,
+                                  ),
+                                ),
+
+                                TextFieldContainer(child: TextFormField(
+                                  controller: registerController.passwordController,
+
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your password';
+                                    }
+                                    return null;
+                                  },
+                                  obscureText: true,
+                                )
+                                ),
+                                GestureDetector(
+                                  onTap: (){
+                                    registerController.register();
+                                    if (_formKey.currentState!.validate()) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Processing Data')),
+                                  );
+                                  }
+                                  },
+                                    onHorizontalDragEnd: (DragEndDetails details){
+                                      if (details.primaryVelocity! > 0) {
+                                        // User swiped Left
+                                      }
+                                      else if (details.primaryVelocity! < 0) {
+                                        // User swiped Right
+                                      }
+                                    },
+                                    child: Image.asset("lib/assets/swipelogo.png", height: 40,width: 40,)
+                                ),
+                                SizedBox(height: 10,),
+                                Text('Swipe right to register',
+
+                                  style: TextStyle(fontFamily: 'SofiaProLight',
+                                    fontSize: 18 ,
+                                    fontWeight: FontWeight.w300,
+                                    foreground: Paint()
+                                      ..color = Colors.white
+                                      ..strokeWidth = 1
+                                      ..style = PaintingStyle.stroke,
+                                  ),
+                                ),
+
+                              ]
+                          ),
+
+                        )],
+
+
+
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
         ),
 
     );

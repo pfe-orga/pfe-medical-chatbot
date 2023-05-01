@@ -1,14 +1,14 @@
 class UserModel {
   int? id;
-  String? Username;
+  String? Name;
   String? Password;
   String? Email;
 
-  UserModel({this.id, this.Username,this.Password,this.Email});
+  UserModel({this.id, this.Name,this.Password,this.Email});
 
   UserModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    Username = json['Username'];
+    Name = json['Name'];
     Password = json['Password'];
     Email = json['Email'];
   }
@@ -16,7 +16,7 @@ class UserModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['Username'] = Username;
+    data['Name'] = Name;
     data['Password'] = Password;
     data['Email'] = Email;
     return data;
@@ -24,14 +24,14 @@ class UserModel {
 }
 class NewUser {
   int? id;
-  String? Username;
+  String? Name;
   String? Password;
   String? Email;
 
-  NewUser({this.Username, this.id, this.Password, this.Email});
+  NewUser({this.Name, this.id, this.Password, this.Email});
 
   NewUser.fromJson(Map<String, dynamic> json) {
-    Username = json['Username'];
+    Name = json['Name'];
     Password = json['Password'];
     id = json['id'];
     Email = json['Email'];
@@ -39,7 +39,7 @@ class NewUser {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Username'] = Username;
+    data['Name'] = Name;
     data['Password'] = Password;
     data['id'] = id;
     data['Email'] = Email;
