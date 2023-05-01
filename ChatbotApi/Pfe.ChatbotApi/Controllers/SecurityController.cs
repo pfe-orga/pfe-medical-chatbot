@@ -186,5 +186,13 @@ namespace Pfe.ChatbotApi.Controllers
             await _context.SaveChangesAsync();
             return dbUser;
         }
+        [HttpGet("GetUserAsync")]
+        public async Task<String> GetUserAsync(int Id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == Id) ?? throw new Exception("user not found");
+            String result = "Name: " + user.Name + "/n Email:" + user.Email;
+            return result;
+        }
     }
+   
 }

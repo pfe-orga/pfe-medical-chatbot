@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<DataContext>
     (options =>options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, AdminService>();
 
 
 builder.Services.AddCors(options =>
