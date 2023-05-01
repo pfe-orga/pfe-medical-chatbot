@@ -133,6 +133,23 @@ namespace Pfe.ChatbotApi.Controllers
             }
             return Unauthorized("invalid user or pwd");
         }
+        [AllowAnonymous]
+        [HttpGet("Profile")]
+        public IActionResult GetUserProfile()
+        {
+            if (_identityService.ConnectedUser == null)
+            {
+                return BadRequest("User not authenticated");
+            }
+
+            var userProfile = new
+            {
+                UserName = _identityService.ConnectedUser.UserName,
+                Email = _identityService.ConnectedUser.Email
+            };
+
+            return Ok(userProfile);
+        }
 
         [AllowAnonymous]
         [HttpPost("Register")]
