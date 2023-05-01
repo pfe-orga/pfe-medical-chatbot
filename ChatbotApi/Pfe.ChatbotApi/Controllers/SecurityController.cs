@@ -132,22 +132,6 @@ namespace Pfe.ChatbotApi.Controllers
             return Unauthorized("invalid user or pwd");
         }
         
-                [Authorize(Roles = "Patient")]
-                [HttpPut("{id}")]
-
-            public async Task<IActionResult> get(int id, [FromBody] Login login)
-        {
-            var user =  _context.Users.FirstOrDefaultAsync(x => x.Email == login.Email);
-
-
-            if (id == login.id)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                return BadRequest("Please provide a valid ID");
-            }
 
         }
         [AllowAnonymous]
