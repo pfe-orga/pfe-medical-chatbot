@@ -34,7 +34,6 @@ namespace Pfe.ChatbotApi.Controllers
         private readonly IConfiguration _configuration;
         private readonly IdentityService _identityService;
 
-
         public SecurityController(IConfiguration configuration, DataContext context, IdentityService identityService)
         {
             _context = context;
@@ -135,21 +134,7 @@ namespace Pfe.ChatbotApi.Controllers
             return Unauthorized("invalid user or pwd");
         }
 
-        [HttpPost("register")]
-        public ActionResult<User> Register(UserRequest request)
-        {
-            var existingUser = _context.Users.FirstOrDefault(u => u.Email == request.Email);
-            if (existingUser != null)
-            {
-                return BadRequest("User with same email already exists");
-            }
-            string password  = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            var user = new User
-
-
-
-
-
+        [AllowAnonymous]
         [HttpPost("Register")]
         public ActionResult<User> Register(UserRequest request)
         {
@@ -184,12 +169,7 @@ namespace Pfe.ChatbotApi.Controllers
 
         }
 
-
-        [Authorize]
-        // PUT api/<SecurityController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add")]
         public async Task<User> AddUserAsync(User user)
         {
@@ -198,10 +178,7 @@ namespace Pfe.ChatbotApi.Controllers
             return savedUser;
         }
 
-        [Authorize]
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("Delete")]
         public async Task<User> DeleteUserAsync(int id)
         {
@@ -211,18 +188,19 @@ namespace Pfe.ChatbotApi.Controllers
             return user;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin, Patient, Doctor")]
         [HttpGet("me")]
         public ActionResult Me()
         {
             return Ok(_identityService.ConnectedUser);
-
+        }
+        [Authorize(Roles = "Admin")]
         [HttpGet("List")]
         public List<User> List()
         {
             return _context.Users.ToList();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("Update")]
         public async Task<User> UpdateUserAsync(User user)
         {
