@@ -135,7 +135,7 @@ namespace Pfe.ChatbotApi.Controllers
             return Unauthorized("invalid user or pwd");
         }
 
-
+        [AllowAnonymous]
         [HttpPost("Register")]
         public ActionResult<User> Register(UserRequest request)
         {
@@ -182,8 +182,7 @@ namespace Pfe.ChatbotApi.Controllers
             return savedUser;
         }
 
-        [Authorize]
-
+        [AllowAnonymous]
         [HttpDelete("Delete")]
         public async Task<User> DeleteUserAsync(int id)
         {
