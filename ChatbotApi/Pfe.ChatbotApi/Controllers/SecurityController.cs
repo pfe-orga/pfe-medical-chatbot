@@ -144,8 +144,8 @@ namespace Pfe.ChatbotApi.Controllers
 
             var userProfile = new
             {
-                UserName = _identityService.ConnectedUser.UserName,
-                Email = _identityService.ConnectedUser.Email
+                Name = _identityService.ConnectedUser.Name,
+                Email= _identityService.ConnectedUser.Email
             };
 
             return Ok(userProfile);

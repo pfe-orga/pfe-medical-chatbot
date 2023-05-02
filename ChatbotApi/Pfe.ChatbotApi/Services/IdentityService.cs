@@ -21,8 +21,10 @@ namespace Pfe.ChatbotApi.Services
                 ConnectedUser = new ConnectedUser
                 {
                     Email = email,
-                    UserName = bdUser.Name,
-                    Password = bdUser.Password
+                    Name = bdUser.Name,
+                    Password = bdUser.Password,
+                    Role = bdUser.Role
+
                 };
             }
 
@@ -30,9 +32,11 @@ namespace Pfe.ChatbotApi.Services
     }
     public class ConnectedUser
     {
-        public string UserName { get; set; }
+        public string Name { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
         public string Email { get; set; }
+        public string Role { get; set; }
+
     }
 }

@@ -9,6 +9,6 @@ namespace Pfe.ChatbotApi.Services.Interfaces
         Task<User> UpdateUserAsync(User user);
 
         List<User> List();
-        
+        Task<User> GetUserAsync(int Id);
     }
 }

@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Enums.NET" Version="4.0.1" />
     <PackageReference Include="Google.Apis.Auth" Version="1.60.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="7.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.4" />
@@ -24,7 +25,11 @@
     <PackageReference Include="Microsoft.Identity.Web" Version="1.16.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
+    <PackageReference Include="OpenAI" Version="1.7.2" />
+    <PackageReference Include="OpenAI.Net.Client" Version="1.0.20" />
     <PackageReference Include="Owin.Security.Providers.Facebook" Version="1.1.0" />
+    <PackageReference Include="SoulCalc.OpenAI.API.Completions" Version="0.1.0" />
+    <PackageReference Include="Spectre.Console" Version="0.46.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 

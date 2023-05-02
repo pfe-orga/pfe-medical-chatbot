@@ -12,7 +12,7 @@ using Pfe.ChatbotApi.Services;
 using Pfe.ChatbotApi.Services.Classes;
 using Pfe.ChatbotApi.Services.Interfaces;
 using System.Text;
-
+using OpenAI.Net;
 var MyAllowSpecificOrigins = "AllowAll";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,10 +20,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<DataContext>
     (options =>options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, AdminService>();
 builder.Services.AddScoped<IdentityService>();
 builder.Services.AddHttpContextAccessor();
-
+// Add  OpenAI services 
+builder.Services.AddOpenAIServices(o =>
+{
+    o.ApiKey = builder.Configuration["OpenAI:ApiKey"];
+});
 
 builder.Services.AddCors(options =>
  {
