@@ -174,6 +174,13 @@ namespace Pfe.ChatbotApi.Controllers
                 user.Name = request.Name;
                 user.Password = password;
                 user.Email = request.Email;
+                if(request.Email =="sfaxi.malek@outlook.fr" || request.Email == "rahma") {
+                    user.role = "Admin";
+                }else
+                {
+                    user.role = request.role;
+                }
+                user.role = request.role;
                 _context.Users.Add(user);
                 _context.SaveChanges();
                 return Ok(user);
@@ -204,7 +211,15 @@ namespace Pfe.ChatbotApi.Controllers
             await _context.SaveChangesAsync();
             return user;
         }
+        [Authorize(Roles = "Doctor, Admin")]
+        [HttpGet("getuser")]
 
+        Task<User> IUserService.GetUserAsync(String name)
+        {
+            var user = _dataContext.Users.FirstOrDefaultAsync(x => x.Name == name) ?? throw new Exception("user not found");
+
+            return user;
+        }
         [Authorize(Roles = "Admin, Patient, Doctor")]
         [HttpGet("me")]
         public ActionResult Me()

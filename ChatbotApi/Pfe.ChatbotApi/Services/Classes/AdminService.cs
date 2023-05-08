@@ -47,9 +47,9 @@ namespace Pfe.ChatbotApi.Services.Classes
             return dbUser;
         }
 
-        Task<User> IUserService.GetUserAsync(int Id)
+        Task<User> IUserService.GetUserAsync(String name)
         {
-            var user = _dataContext.Users.FirstOrDefaultAsync(x => x.Id == Id) ?? throw new Exception("user not found");
+            var user = _dataContext.Users.FirstOrDefaultAsync(x => x.Name == name) ?? throw new Exception("user not found");
 
             return user;
         }

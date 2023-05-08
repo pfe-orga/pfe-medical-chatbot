@@ -7,6 +7,8 @@ namespace Pfe.ChatbotApi.Services.Interfaces
         Task<User> AddUserAsync(User user);
         Task<User> DeleteUserAsync(int Id);
         Task<User> UpdateUserAsync(User user);
+        Task<User> getUserAsync(String name);
+
 
         List<User> List();
         

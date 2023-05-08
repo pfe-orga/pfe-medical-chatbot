@@ -17,6 +17,8 @@ namespace Pfe.ChatbotApi.Core
         public String Email { get; set; } = string.Empty;
         [Required]
         public String Password { get; set; } = string.Empty;
+        [Required]
+        public Roles role { get; set; }
         
     }
 }
