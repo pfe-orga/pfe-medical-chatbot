@@ -1,6 +1,5 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:pfemedicalchatbotapp/controllers/RegistrationController.dart';
 
 import '../controllers/HomeController.dart';
 import '../dependency_injection/service_locator.dart';
@@ -14,7 +13,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
 
-  final registerController = getIt<RegistrationController>();
+  // final registerController = getIt<RegistrationController>();
 
   final homeController = getIt<HomeController>();
 
@@ -25,10 +24,10 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
 
-    final registerController = getIt<RegistrationController>();
+    // final registerController = getIt<RegistrationController>();
+    final homeController = getIt<HomeController>();
 
     // mainAxisAlignment: MainAxisAlignment.start;
-
     // Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -75,7 +74,6 @@ class _RegisterState extends State<Register> {
                         SizedBox(height: 40),
 
                         Text('Create Your Account',
-
                           style: TextStyle(fontFamily: 'SofiaProLight',
                             fontSize: 22 ,
                             fontWeight: FontWeight.w300,
@@ -122,7 +120,7 @@ class _RegisterState extends State<Register> {
                                   ),
                                 ),
                                 TextFieldContainer(child: TextFormField(
-                                  controller: registerController.nameController,
+                                  controller: homeController.nameController,
 
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -134,7 +132,6 @@ class _RegisterState extends State<Register> {
                                 SizedBox(height: 5),
 
                                 Text('E-mail',
-
                                   style: TextStyle(fontFamily: 'SofiaProLight',
                                     fontSize: 18 ,
                                     fontWeight: FontWeight.w300,
@@ -146,13 +143,11 @@ class _RegisterState extends State<Register> {
                                 ),
 
                                 TextFieldContainer(child: TextFormField(
-                                  controller: registerController.emailController,
-
+                                  controller: homeController.emailController,
                                   keyboardType: TextInputType.emailAddress,
                                   onChanged: (val){
                                     validateEmail(val);
                                   },
-
                                   // validator: (value) {
                                   //   if (value == null || value.isEmpty) {
                                   //     return 'Please enter your e-mail address';
@@ -176,7 +171,7 @@ class _RegisterState extends State<Register> {
                                 ),
 
                                 TextFieldContainer(child: TextFormField(
-                                  controller: registerController.passwordController,
+                                  controller: homeController.passwordController,
 
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -189,7 +184,7 @@ class _RegisterState extends State<Register> {
                                 ),
                                 GestureDetector(
                                   onTap: (){
-                                    registerController.register();
+                                    homeController.register();
                                     if (_formKey.currentState!.validate()) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(content: Text('Processing Data')),
@@ -268,8 +263,6 @@ class _TextFieldContainerState extends State<TextFieldContainer> {
   Widget build(BuildContext context) {
 
     // Size size = MediaQuery.of(context).size;
-
-
     return Container(
       margin:const  EdgeInsets.symmetric(vertical: 20),
       padding:const EdgeInsets.symmetric(horizontal: 20, vertical: 5),

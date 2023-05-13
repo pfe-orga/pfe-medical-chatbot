@@ -50,6 +50,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  bubble: any
 
 dev_dependencies:
   retrofit_generator: any
@@ -80,10 +81,21 @@ flutter:
     - lib/assets/fblogo.png
     - lib/assets/googlelogo.png
     - lib/assets/lovepik-abstract-background-mobile-phone-wallpaper-image_400624615.jpg
+    - lib/assets/background.png
+    - lib/assets/semibackground.png
+    - lib/assets/kawiiui-ai.png
+    - lib/assets/remembermeicon.png
+    - lib/assets/facebook.png
+    - lib/assets/_Path_ (1).png
+    - lib/assets/gmail.png
+    - lib/assets/firstscreenimage.png
   fonts:
     - family: SofiaProLight
       fonts:
         - asset: lib/fonts/SofiaPro-Light.ttf
+    - family: Poppins
+      fonts:
+        - asset: lib/fonts/Poppins-SemiBold.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

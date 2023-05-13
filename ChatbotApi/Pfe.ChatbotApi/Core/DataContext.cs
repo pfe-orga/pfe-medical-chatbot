@@ -7,5 +7,6 @@ namespace Pfe.ChatbotApi.Core
         public DataContext(DbContextOptions<DataContext> options): base(options) { }
         
         public DbSet<User> Users { get; set; }
+        public object UpdateUser { get; internal set; }
     }
 }

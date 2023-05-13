@@ -17,13 +17,14 @@ using Microsoft.AspNetCore.Identity;
 using Pfe.ChatbotApi.Services;
 
 using System.Text.RegularExpressions;
+using System.Text.Json;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Pfe.ChatbotApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class SecurityController : ControllerBase
 
@@ -171,7 +172,7 @@ namespace Pfe.ChatbotApi.Controllers
         }
 
 
-        [Authorize]
+        [AllowAnonymous]
         // PUT api/<SecurityController>/5
 
         [HttpPost("Add")]
@@ -183,7 +184,7 @@ namespace Pfe.ChatbotApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpDelete("Delete")]
+        [HttpDelete("Delete/{id}")]
         public async Task<User> DeleteUserAsync(int id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("user not found");
@@ -198,21 +199,67 @@ namespace Pfe.ChatbotApi.Controllers
         {
             return Ok(_identityService.ConnectedUser);
         }
-            [HttpGet("List")]
-            public List<User> List()
-            {
-                return _context.Users.ToList();
-            }
+        [AllowAnonymous]
+        [HttpGet("List")]
+        public List<User> List()
+        {
+            return _context.Users.ToList();
 
-            [HttpPut("Update")]
-            public async Task<User> UpdateUserAsync(User user)
-            {
-                var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id) ?? throw new Exception("user not found");
-                _context.Users.Update(user);
-                await _context.SaveChangesAsync();
-                return dbUser;
-            }
+        }
+        [HttpPut("Update")]
+        public async Task<User> UpdateUserAsync(UpdateUser updateUser)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == updateUser.Id) ?? throw new Exception("user not found");
+            dbUser.Name = updateUser.Name;
+            //dbUser.Password = user.Password;
+            dbUser.Email = updateUser.Email;
+            await _context.SaveChangesAsync();
+            return dbUser;
         }
 
-    } 
+
+        //[HttpPut("Update")]
+        //public async Task<User> UpdateUserAsync(User user)
+        //{
+        //var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id) ?? throw new Exception("user not found");
+        // _context.Users.Update(user);
+        // await _context.SaveChangesAsync();
+        //return user;
+        //}*
+        [AllowAnonymous]
+        [HttpGet("chatbot/{text}")]
+        public async Task<PythonResponse> GetChatbotResponseAsync(string text)
+        {
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:5000");
+            var request = new PythonRequest
+            {
+                input_text = text,
+            };
+            var data = new System.Net.Http.StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            var result = await client.PostAsync("/api/chatbot", data);
+            return JsonSerializer.Deserialize<PythonResponse>(await result.Content.ReadAsStringAsync());
+           
+        }
+
+
+    }
+    public class PythonRequest
+    {
+        public string input_text { get; set; }
+    }
+
+    public class PythonResponse
+    {
+        //public List<string> history { get; set; }
+        public PythonResponseAt response { get; set; }
+    }
+
+    public class PythonResponseAt
+    {
+        //public List<string> history { get; set; }
+        public string response { get; set; }
+   }
+
+}
 
