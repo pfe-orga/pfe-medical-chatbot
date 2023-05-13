@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:pfemedicalchatbotapp/view/firstscreen.dart';
-import 'package:pfemedicalchatbotapp/view/register.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../dependency_injection/service_locator.dart';
 import 'ChatScreen.dart';
-import 'Chat_Bot_Screen.dart';
 import 'List.dart';
 import 'LoginScreen.dart';
 import 'OpeningScreen.dart';
 import 'RegisterScreen.dart';
-import 'login.dart';
 
 Future<void> main() async {
   await setup();
@@ -29,7 +26,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home:  ChatScreenn(),
+      home:  RegisterScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
