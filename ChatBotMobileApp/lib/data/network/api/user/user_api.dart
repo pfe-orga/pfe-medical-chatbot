@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pfemedicalchatbotapp/data/models/RegistrationModel.dart';
+import '../../../models/AddModel.dart';
+import '../../../models/ListModel.dart';
 import '../../../models/LoginModel.dart';
 import '../../../models/UserModel.dart';
 import '../dio_client.dart';
@@ -19,7 +21,6 @@ class UserApi {
     } on DioError catch (e) {
       print(e);
       rethrow;
-
     }
   }
 
@@ -35,7 +36,7 @@ class UserApi {
 
   login(LoginModel loginModel) async {
     try {
-      final response = await dioClient.post("${Endpoints.SecurityEndpoints}/token",data: loginModel.toJson());
+      final response = await dioClient.post("${Endpoints.SecurityEndpoints}/Login",data: loginModel.toJson());
       return response.data;
     } on DioError catch (e) {
       print(e);
@@ -44,13 +45,44 @@ class UserApi {
   }
   register(RegistrationModel registrationModel) async {
     try {
-      final response = await dioClient.post("${Endpoints.SecurityEndpoints}/register",data: registrationModel.toJson());
+      final response = await dioClient.post("${Endpoints.SecurityEndpoints}/Register",data: registrationModel.toJson());
       return response.data;
     } on DioError catch (e) {
       print(e);
       rethrow;
     }
   }
+  Future<List<ListModel>> getList() async {
+    try {
+      final response = await dioClient.get("${Endpoints.SecurityEndpoints}/List");
+      print(response.data);
+      return (response.data as List).map((e) => ListModel.fromJson(e)).toList();
+    } on DioError catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+  Future<User> addUser(User user) async  {
+    try {
+      final response = await dioClient.post("${Endpoints.SecurityEndpoints}/Add",data: user.toJson());
+      return User.fromJson(response.data);
+    } on DioError catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+  Future<void> deleteUser(int id) async {
+    try {
+      await dioClient.delete("${Endpoints.SecurityEndpoints}/Delete/"+ id.toString());
+    } catch (e) {
+      rethrow;
+    }
+  }
+  Future<UserModel> updateUser(UserModel userModel) async {
+    final response = await dioClient.put("${Endpoints.SecurityEndpoints}/Update", data: userModel.toJson());
+    return UserModel.fromJson(response.data);
+  }
+}
 
 
 //
@@ -87,4 +119,3 @@ class UserApi {
   //
   //   }
   // }
-}

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../controllers/HomeController.dart';
-import '../controllers/LoginController.dart';
 import '../dependency_injection/service_locator.dart';
 
 class Login extends StatefulWidget {
@@ -12,7 +11,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final loginController = getIt<LoginController>();
+  // final loginController = getIt<LoginController>();
 
   final homeController = getIt<HomeController>();
 
@@ -22,8 +21,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final loginController = getIt<LoginController>();
-    loginController.init();
+    final homeController = getIt<HomeController>();
+    homeController.init();
 
     // mainAxisAlignment: MainAxisAlignment.start;
 
@@ -120,7 +119,7 @@ class _LoginState extends State<Login> {
                                 ),
 
                                 TextFieldContainer(child: TextFormField(
-                                  controller: loginController.emailController,
+                                  controller: homeController.emailController,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter your username';
@@ -144,7 +143,7 @@ class _LoginState extends State<Login> {
                                 ),
 
                                 TextFieldContainer(child: TextFormField(
-                                  controller: loginController.passwordController,
+                                  controller: homeController.passwordController,
 
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -158,7 +157,7 @@ class _LoginState extends State<Login> {
                                 SizedBox(height: 40),
                                 GestureDetector(
                                     onTap: (){
-                                      loginController.login();
+                                      homeController.login();
                                       if (_formKey.currentState!.validate()) {
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           SnackBar(content: Text('Processing Data')),

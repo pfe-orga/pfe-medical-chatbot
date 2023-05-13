@@ -8,6 +8,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../dependency_injection/service_locator.dart';
+import 'ChatScreen.dart';
+import 'Chat_Bot_Screen.dart';
+import 'List.dart';
+import 'LoginScreen.dart';
+import 'OpeningScreen.dart';
+import 'RegisterScreen.dart';
 import 'login.dart';
 
 Future<void> main() async {
@@ -23,7 +29,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home:   Register(),
+      home:  ChatScreenn(),
       debugShowCheckedModeBanner: false,
     );
   }
