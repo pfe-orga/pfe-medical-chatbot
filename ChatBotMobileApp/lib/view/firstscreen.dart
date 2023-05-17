@@ -259,3 +259,50 @@
 // //     client.close();
 // //   }
 // // }
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'OpeningScreen.dart'; // Import the OpeningScreen class
+
+class FirstScreen extends StatelessWidget {
+  const FirstScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => OpeningScreen()),
+      );
+    });
+    return Scaffold(
+      body: Container(
+          child: Stack(
+            children: [
+              SizedBox(
+                width: screenSize.width,
+                height: screenSize.height,
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFc0c3c9).withOpacity(1.0),
+                        spreadRadius: 5,
+                        blurRadius: 30,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                    image: DecorationImage(
+                      image: AssetImage("lib/assets/1.png"),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+  }
+}

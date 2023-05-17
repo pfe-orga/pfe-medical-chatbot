@@ -12,88 +12,169 @@ class _ChatScreennState extends State<ChatScreenn> {
   final chatbotController = getIt<ChatbotController>();
   List<String> _data = [];
   List<String> _resp = [];
+  final TextEditingController _textEditingController = TextEditingController();
+  bool _isTextFieldFocused = false;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:const Text('Chat'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: _data.length + _resp.length, // Replace with the actual number of chat messages
-              itemBuilder: (context, index) {
-                if (index < _data.length){
-                  // User message
-                  return ListTile(
-                    title: Text(_data[index]),
-                  );
-                }else {
-                  // Bot message
-                  final botIndex = index - _data.length;
-                  final response = _resp[botIndex];
-                  // final botMessage = response is String ? response : (response['text']?? '').toString();
-                  final botMessage = response.toString();
-                  return ListTile(
-                      title: Text(botMessage),
-                  );
-                }
-              },
+      resizeToAvoidBottomInset: false,
+      body: GestureDetector(
+        onTap: () {
+          setState(() {
+            _isTextFieldFocused = true;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('lib/assets/chatbotbackground.png'),
+              fit: BoxFit.cover,
             ),
           ),
-          Padding(
-            padding:const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                   controller: chatbotController.inputTextController,
-                    onSubmitted: (_) => sendUserMessage(),
-                    decoration: const InputDecoration(
-                      hintText: 'Enter a message',
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    sendUserMessage();
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: _data.length + _resp.length,
+                  itemBuilder: (context, index) {
+                    if (index % 2 == 0) {
+                      // User message
+                      final userIndex = index ~/ 2;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFF51f8e6),
+                                      Color(0xFF5eeaa2)
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(13),
+                                  child: Text(
+                                    _data[userIndex],
+                                    style: TextStyle(color: Colors.white),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      // Bot message
+                      final botIndex = (index - 1) ~/ 2;
+                      final response = _resp[botIndex];
+                      final botMessage = response.toString();
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFF51f8e6),
+                                      Color(0xFF5eeaa2)
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(13),
+                                  child: Text(
+                                    botMessage,
+                                    style: TextStyle(color: Colors.white),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                 ),
-              ],
-            ),
+              ),
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                padding: const EdgeInsets.all(8.0),
+                margin: EdgeInsets.only(
+                  bottom: _isTextFieldFocused
+                      ? MediaQuery.of(context).viewInsets.bottom
+                      : 0.0,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        focusNode: FocusNode(),
+                        controller: _textEditingController,
+                        onTap: () {
+                          setState(() {
+                            _isTextFieldFocused = true;
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            // Handle TextField value changes
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Enter a message',
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        sendUserMessage();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
+
   void sendUserMessage() async {
-    final inputText = chatbotController.inputTextController.text;
-    chatbotController.inputTextController.clear();
+    final inputText = _textEditingController.text;
+    _textEditingController.clear();
     final userMessage = 'User: $inputText';
     setState(() {
       _data.add(userMessage);
-
     });
 
     final botResponse = await chatbotController.getChatResponse(inputText);
-    // final botMessage = 'Bot: ${botResponse.response}';
-    final botMessage = 'Bot: ${botResponse.response?.response ?? ''}'; // Access the 'response' property
-    print(botResponse.response);
+    final botMessage = 'Bot: ${botResponse.response?.response ?? ''}';
+
     setState(() {
-      // _resp[_resp.length - 1] = botMessage;
-      _data.add(botMessage);
+      _resp.add(botMessage);
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      chatbotController.responseController.text = botResponse.response?.response?.toString() ?? '';
-      _scrollController.animateTo(
-        0.0,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
     });
   }
-
 }

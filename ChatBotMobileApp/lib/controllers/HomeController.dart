@@ -28,6 +28,7 @@ class HomeController {
   final dateController = TextEditingController();
   final currentDateController = TextEditingController();
   final newDateController = TextEditingController();
+  final roleController = TextEditingController();
 
   // -------------- Local Variables ---------------
   final List<NewUser> newUsers = [];
@@ -39,8 +40,15 @@ class HomeController {
     return await userApi.getUsers();
   }
 
-  Future<UserModel> me() async {
-    return await userApi.me();
+  Future<UserModel> me(String token) async {
+      await userApi.me(token).then((connectedUser) =>{
+      sharedResourcesService.setUserProfile(userProfile: connectedUser);
+      return connectedUser
+    }
+        
+    ).whenComplete(() => return null);
+      
+
   }
 
   Future<List<WeatherModel>> getWfs() async {
@@ -51,7 +59,7 @@ class HomeController {
   }
   //registration controller
   Future<bool> register() async {
-    var register = RegistrationModel(Email:emailController.text, Name:nameController.text, Password: passwordController.text );
+    var register = RegistrationModel(Email:emailController.text, Name:nameController.text, Password: passwordController.text, Role: roleController.text);
     print('username : ${register.Name}');
     print('email : ${register.Email}');
     print('pwd: ${register.Password}');
@@ -63,14 +71,14 @@ class HomeController {
 
   //login controller
 
-  Future<bool> login() async {
-    var login = LoginModel(Email:emailController.text, Password: passwordController.text );
+  Future<String> login() async {
+    var login = LoginModel(Email:emailController.text, Password: passwordController.text);
     print('email : ${login.Email}');
     print('pwd: ${login.Password}');
     var token =  await userApi.login(login);
     sharedResourcesService.setUserToken(userToken: token);
     print('token: ${token}');
-    return token != null ? true : false;
+    return token;
   }
 
 

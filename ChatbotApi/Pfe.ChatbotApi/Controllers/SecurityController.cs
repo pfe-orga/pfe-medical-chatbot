@@ -18,6 +18,7 @@ using Pfe.ChatbotApi.Services;
 
 using System.Text.RegularExpressions;
 using System.Text.Json;
+using System.Data;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -28,12 +29,13 @@ namespace Pfe.ChatbotApi.Controllers
     [ApiController]
     public class SecurityController : ControllerBase
 
+
+
     {
-        public static User user = new User();
-        private string idToken;
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         private readonly IdentityService _identityService;
+
 
 
         public SecurityController(IConfiguration configuration, DataContext context, IdentityService identityService)
@@ -41,15 +43,17 @@ namespace Pfe.ChatbotApi.Controllers
             _context = context;
             _configuration = configuration;
             _identityService = identityService;
-
         }
 
-        //// POST api/<SecurityController>
+
+
         [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> PostAsync([FromBody] Login login)
         {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(login.Password);
+
+
 
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == login.Email);
             if (login.Provider == "Facebook" || login.Provider == "Google")
@@ -63,6 +67,7 @@ namespace Pfe.ChatbotApi.Controllers
                         {
                             Audience = new[] { _configuration["Google:ClientId"] }
                         };
+                        string idToken = string.Empty;
                         payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
                     }
                     catch (InvalidJwtException)
@@ -76,24 +81,24 @@ namespace Pfe.ChatbotApi.Controllers
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new[]
-                    {
-                new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, login.Email),
-                new Claim(JwtRegisteredClaimNames.Email, login.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
+                {
+                 new Claim("Id", Guid.NewGuid().ToString()),
+                 new Claim(JwtRegisteredClaimNames.Sub, login.Email),
+                 new Claim(JwtRegisteredClaimNames.Email, login.Email),
+                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                 }),
                     Expires = DateTime.UtcNow.AddDays(7),
                     Issuer = issuer,
                     Audience = audience,
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                        SecurityAlgorithms.HmacSha512Signature)
+                SecurityAlgorithms.HmacSha512Signature)
                 };
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var jwtToken = tokenHandler.WriteToken(token);
                 var stringToken = tokenHandler.WriteToken(token);
                 string password2
-                 = BCrypt.Net.BCrypt.HashPassword(login.Password);
+                = BCrypt.Net.BCrypt.HashPassword(login.Password);
                 user.Password = password2;
                 user.Email = login.Email;
                 _context.Users.Add(user);
@@ -101,31 +106,37 @@ namespace Pfe.ChatbotApi.Controllers
 
 
 
+
+
                 return Ok(stringToken);
             }
 
 
+
+
             else if (user != null && BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
 
+
+
             {
-                // Authenticate with username and password and generate JWT token
-                var issuer = _configuration["Jwt:Issuer"];
+                // Authenticate with username and password and generate JWT token
+                var issuer = _configuration["Jwt:Issuer"];
                 var audience = _configuration["Jwt:Audience"];
                 var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new[]
-                    {
-                new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, login.Email),
-                new Claim(JwtRegisteredClaimNames.Email, login.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
+                {
+                 new Claim("Id", Guid.NewGuid().ToString()),
+                 new Claim(JwtRegisteredClaimNames.Sub, login.Email),
+                 new Claim(JwtRegisteredClaimNames.Email, login.Email),
+                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+ }),
                     Expires = DateTime.UtcNow.AddDays(7),
                     Issuer = issuer,
                     Audience = audience,
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                        SecurityAlgorithms.HmacSha512Signature)
+                SecurityAlgorithms.HmacSha512Signature)
                 };
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -135,63 +146,81 @@ namespace Pfe.ChatbotApi.Controllers
             }
             return Unauthorized("invalid user or pwd");
         }
+        [AllowAnonymous]
+        [HttpGet("Profile")]
+        public IActionResult GetUserProfile()
+        {
+            if (_identityService.ConnectedUser == null)
+            {
+                return BadRequest("User not authenticated");
+            }
+
+
+
+            var userProfile = new
+            {
+                UserName = _identityService.ConnectedUser.UserName,
+                Email = _identityService.ConnectedUser.Email
+            };
+
+
+
+            return Ok(userProfile);
+        }
+
+
 
         [AllowAnonymous]
         [HttpPost("Register")]
         public ActionResult<User> Register(UserRequest request)
         {
-            var passwordRegex = new Regex(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$");
-            var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-
-            if (!emailRegex.IsMatch(request.Email))
+            if (request.Role.Equals(Role.Admin) && _identityService.ConnectedUser?.Role.Equals(Role.Admin) == false)
             {
-                return BadRequest("Invalid email address");
+                throw new UnauthorizedAccessException();
             }
-
-            if (!passwordRegex.IsMatch(request.Password))
+            string password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var user = new User
             {
-                return BadRequest("Invalid password");
-            }
-
-            if (emailRegex.IsMatch(request.Email) && passwordRegex.IsMatch(request.Password))
-            {
-                string password = BCrypt.Net.BCrypt.HashPassword(request.Password);
-                user.Name = request.Name;
-                user.Password = password;
-                user.Email = request.Email;
-                _context.Users.Add(user);
-                _context.SaveChanges();
-                return Ok(user);
-            }
-            else
-            {
-                return BadRequest("Invalid email address and password");
-            }
-
-
+                Name = request.Name,
+                Password = password,
+                Email = request.Email,
+                Role = Role.AllRoles().First(x => x.Equals(request.Role))
+            };
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return Ok(user);
         }
 
 
-        [AllowAnonymous]
-        // PUT api/<SecurityController>/5
 
-        [HttpPost("Add")]
-        public async Task<User> AddUserAsync(User user)
-        {
-            var savedUser = _context.Users.Add(user).Entity;
-            await _context.SaveChangesAsync();
-            return savedUser;
-        }
-
-        [AllowAnonymous]
-        [HttpDelete("Delete/{id}")]
+        [Authorize]
+        [HttpDelete("Delete")]
         public async Task<User> DeleteUserAsync(int id)
         {
+            if (!_identityService.IsAdmin())
+            {
+                throw new UnauthorizedAccessException();
+            }
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("user not found");
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return user;
         }
+
+
+
+        [Authorize]
+        [HttpGet("getuser")]
+        Task<User> GetUserAsync(String name)
+        {
+            if (!_identityService.IsAdmin())
+            {
+                throw new UnauthorizedAccessException();
+            }
+            return _context.Users.FirstOrDefaultAsync(x => x.Name == name) ?? throw new Exception("user not found");
+        }
+
+
 
         [Authorize]
         [HttpGet("me")]
@@ -199,33 +228,40 @@ namespace Pfe.ChatbotApi.Controllers
         {
             return Ok(_identityService.ConnectedUser);
         }
-        [AllowAnonymous]
+
+
+
+        [Authorize]
         [HttpGet("List")]
         public List<User> List()
         {
-            return _context.Users.ToList();
-
+            if (!_identityService.IsAdmin())
+            {
+                throw new UnauthorizedAccessException();
+            }
+            return _context.Users
+            .ToList()
+            .ConvertAll(x =>
+            {
+                var user = x;
+                user.Password = string.Empty;
+                return user;
+            });
+            ;
         }
+        [Authorize]
         [HttpPut("Update")]
-        public async Task<User> UpdateUserAsync(UpdateUser updateUser)
+        public async Task<User> UpdateUserAsync(User user)
         {
-            var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == updateUser.Id) ?? throw new Exception("user not found");
-            dbUser.Name = updateUser.Name;
-            //dbUser.Password = user.Password;
-            dbUser.Email = updateUser.Email;
+            if (!_identityService.IsAdmin())
+            {
+                throw new UnauthorizedAccessException();
+            }
+            var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id) ?? throw new Exception("user not found");
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return dbUser;
         }
-
-
-        //[HttpPut("Update")]
-        //public async Task<User> UpdateUserAsync(User user)
-        //{
-        //var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id) ?? throw new Exception("user not found");
-        // _context.Users.Update(user);
-        // await _context.SaveChangesAsync();
-        //return user;
-        //}*
         [AllowAnonymous]
         [HttpGet("chatbot/{text}")]
         public async Task<PythonResponse> GetChatbotResponseAsync(string text)
@@ -239,11 +275,11 @@ namespace Pfe.ChatbotApi.Controllers
             var data = new System.Net.Http.StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
             var result = await client.PostAsync("/api/chatbot", data);
             return JsonSerializer.Deserialize<PythonResponse>(await result.Content.ReadAsStringAsync());
-           
+
         }
 
-
     }
+
     public class PythonRequest
     {
         public string input_text { get; set; }
@@ -259,7 +295,7 @@ namespace Pfe.ChatbotApi.Controllers
     {
         //public List<string> history { get; set; }
         public string response { get; set; }
-   }
+    }
+
 
 }
-

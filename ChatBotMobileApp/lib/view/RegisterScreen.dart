@@ -2,6 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import '../controllers/HomeController.dart';
 import '../dependency_injection/service_locator.dart';
+import 'ChatScreen.dart';
+import 'WelcomeScreen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -14,13 +16,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final homeController = getIt<HomeController>();
   final _formKey = GlobalKey<FormState>();
   String _errorMessage = '';
+  String? selectedOption;
+  @override
+  void initState() {
+    super.initState();
+    selectedOption = 'patient';
+  }
 
   @override
   Widget build(BuildContext context) {
     final homeController = getIt<HomeController>();
     bool rememberMe = false;
     String _errorMessage = '';
-    String? selectedOption;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -142,7 +149,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onChanged: (newValue) {
                               setState(() {
                                 selectedOption = newValue;
+                                homeController.roleController.text = newValue.toString();
                               });
+                              print("Selected Option: $selectedOption");
                             },
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -155,11 +164,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             items: const [
                               DropdownMenuItem(
-                                value: 'Patient',
+                                value: 'patient',
                                 child: Text('Patient'),
                               ),
                               DropdownMenuItem(
-                                value: 'Doctor',
+                                value: 'doctor',
                                 child: Text('Doctor'),
                               ),
                             ],
@@ -230,7 +239,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                   ),
                                   onPressed: () {
-                                    homeController.register();
+                                    print("Selected Option: $selectedOption");
+                                    homeController.register().then((value) => homeController.login().then((_){
+                                      if (selectedOption == 'patient') {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => WelcomeScreen(),
+                                          ),
+                                        );
+                                      } else if (selectedOption == 'doctor') {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ChatScreenn(),
+                                          ),
+                                        );
+                                      }
+                                      // Navigator.pushReplacement(
+                                      //   context,
+                                      //   MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                                      // );
+                                    }
+                                    )
+                                    );
                                     if (_formKey.currentState!.validate()) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Processing Data')),

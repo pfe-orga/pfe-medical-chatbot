@@ -89,6 +89,9 @@ flutter:
     - lib/assets/_Path_ (1).png
     - lib/assets/gmail.png
     - lib/assets/firstscreenimage.png
+    - lib/assets/1.png
+    - lib/assets/chatbotbackground.png
+    - lib/assets/image (3).png
   fonts:
     - family: SofiaProLight
       fonts:
@@ -96,6 +99,9 @@ flutter:
     - family: Poppins
       fonts:
         - asset: lib/fonts/Poppins-SemiBold.ttf
+    - family: coolvetica
+      fonts:
+        - asset: lib/fonts/coolvetica condensed rg.otf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

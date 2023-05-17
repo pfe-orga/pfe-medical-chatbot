@@ -171,7 +171,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  homeController.login();
+
+                                  homeController.login().then((token) {
+                                    homeController.me(token).then((connectedUser) => {
+                                      if(connectedUser.Role)
+                                    });
+                                    print('value: ${token}'); // Print the value
+                                  });
+
                                   if (_formKey.currentState!.validate()) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text('Processing Data')),

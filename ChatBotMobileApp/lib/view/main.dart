@@ -12,6 +12,8 @@ import 'List.dart';
 import 'LoginScreen.dart';
 import 'OpeningScreen.dart';
 import 'RegisterScreen.dart';
+import 'SanitasBotScreen.dart';
+import 'WelcomeScreen.dart';
 
 Future<void> main() async {
   await setup();
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home:  RegisterScreen(),
+      home:  FirstScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

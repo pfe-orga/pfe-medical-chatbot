@@ -11,34 +11,93 @@ class OpeningScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-
       body: Container(
-        child: SizedBox(
-          width: screenSize.width,
-          height: screenSize.height,
-          child: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFFc0c3c9).withOpacity(1.0),
-                  spreadRadius: 5,
-                  blurRadius: 30,
-                  offset: Offset(0, 5),
+        child: Stack(
+          children: [
+            SizedBox(
+              width: screenSize.width,
+              height: screenSize.height,
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFc0c3c9).withOpacity(1.0),
+                      spreadRadius: 5,
+                      blurRadius: 30,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                  image: DecorationImage(
+                    image: AssetImage("lib/assets/firstscreenimage.png"),
+                    fit: BoxFit.fill,
+                  ),
                 ),
-              ],
-              image: DecorationImage(
-                image: AssetImage("lib/assets/firstscreenimage.png"),
-                fit: BoxFit.fill,
               ),
             ),
-          ),
+            Positioned(
+              top: 350,
+              // bottom: 100,
+              left: 20,
+              right: 20,
+              child: UnicornOutlineButton(
+                color: const Color(0xFF15e0c3),
+                strokeWidth: 2,
+                radius: 24,
+                gradient: const LinearGradient(colors: [Color(0xFF15e0c3), Color(0xFF15e0c3)]),
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 22,
+                    fontWeight: FontWeight.w100,
+                    foreground: Paint()
+                      ..color = Colors.white
+                      ..strokeWidth = 1
+                      ..style = PaintingStyle.fill,
+                  ),
+                ),
+                onPressed: () {
+                  Get.to(RegisterScreen());
+                  }
 
+              ),
+            ),
+            Positioned(
+              top: 450,
+              // bottom: 100,
+              left: 20,
+              right: 20,
+              child: UnicornOutlineButton(
+                  color: const Color(0xFF15e0c3),
+                  strokeWidth: 2,
+                  radius: 24,
+                  gradient: const LinearGradient(colors: [Color(0xFF15e0c3), Color(0xFF15e0c3)]),
+                  child: Text(
+                    'Log In',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 22,
+                      fontWeight: FontWeight.w100,
+                      foreground: Paint()
+                        ..color = Colors.white
+                        ..strokeWidth = 1
+                        ..style = PaintingStyle.fill,
+                    ),
+                  ),
+                  onPressed: () {
+                    Get.to(LoginScreen());
+                  }
+
+              ),
+            ),
+
+          ],
         ),
       ),
     );
-
   }
 }
+
 class UnicornOutlineButton extends StatelessWidget {
   final _GradientPainter _painter;
   final Widget _child;
