@@ -19,6 +19,8 @@ using Pfe.ChatbotApi.Services;
 using System.Text.RegularExpressions;
 using System.Text.Json;
 using System.Data;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -194,12 +196,12 @@ namespace Pfe.ChatbotApi.Controllers
 
 
         [Authorize]
-        [HttpDelete("Delete")]
+        [HttpDelete("Delete/{id}")]
         public async Task<User> DeleteUserAsync(int id)
         {
             if (!_identityService.IsAdmin())
             {
-                throw new UnauthorizedAccessException();
+               throw new UnauthorizedAccessException();
             }
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("user not found");
             _context.Users.Remove(user);
@@ -213,13 +215,9 @@ namespace Pfe.ChatbotApi.Controllers
         [HttpGet("getuser")]
         Task<User> GetUserAsync(String name)
         {
-            if (!_identityService.IsAdmin())
-            {
-                throw new UnauthorizedAccessException();
-            }
+            
             return _context.Users.FirstOrDefaultAsync(x => x.Name == name) ?? throw new Exception("user not found");
         }
-
 
 
         [Authorize]
@@ -230,35 +228,35 @@ namespace Pfe.ChatbotApi.Controllers
         }
 
 
-
+        
         [Authorize]
         [HttpGet("List")]
         public List<User> List()
         {
             if (!_identityService.IsAdmin())
             {
-                throw new UnauthorizedAccessException();
+               throw new UnauthorizedAccessException();
             }
-            return _context.Users
-            .ToList()
-            .ConvertAll(x =>
-            {
-                var user = x;
-                user.Password = string.Empty;
-                return user;
-            });
-            ;
+            return _context.Users.ToList();
+            //.ConvertAll(x =>
+            //{
+               // var user = x;
+               // user.Password = string.Empty;
+               // return user;
+            //});
+            
         }
         [Authorize]
         [HttpPut("Update")]
-        public async Task<User> UpdateUserAsync(User user)
+        public async Task<User> UpdateUserAsync(UpdateUser user)
         {
             if (!_identityService.IsAdmin())
             {
                 throw new UnauthorizedAccessException();
             }
             var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id) ?? throw new Exception("user not found");
-            _context.Users.Update(user);
+            dbUser.Email = user.Email;
+            dbUser.Name = user.Name;
             await _context.SaveChangesAsync();
             return dbUser;
         }
@@ -277,7 +275,28 @@ namespace Pfe.ChatbotApi.Controllers
             return JsonSerializer.Deserialize<PythonResponse>(await result.Content.ReadAsStringAsync());
 
         }
+        [AllowAnonymous]
+        [HttpGet("showdoctor")]
+        public async Task<List<string>> ShowDoctors(string place)
+        {
+            var GeoLocs = await _context.GeoLocs
+                .Where(x => x.place.ToLower().Contains(place.ToLower()))
+                .Select(x => x.names).Distinct()
+                .ToListAsync();
 
+            if (GeoLocs.Count == 0)
+            {
+                throw new Exception("No doctors found in the specified place.");
+            }
+
+            return GeoLocs;
+        }
+        [AllowAnonymous]
+        [HttpGet("DoctorsList")]
+        public List<GeoLocation> DoctorsList()
+        { 
+            return _context.GeoLocs.ToList();
+        }
     }
 
     public class PythonRequest
@@ -289,12 +308,29 @@ namespace Pfe.ChatbotApi.Controllers
     {
         //public List<string> history { get; set; }
         public PythonResponseAt response { get; set; }
+        //public List<string> hist { get; set; }
+
+
     }
 
     public class PythonResponseAt
     {
         //public List<string> history { get; set; }
         public string response { get; set; }
+        public List<string> record { get; set; }
+        public List<string> hist { get; set; }
+
+
+    }
+
+    public class UpdateUser
+    {
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public String Name { get; set; }
+        [Required]
+        public String Email { get; set; }
     }
 
 

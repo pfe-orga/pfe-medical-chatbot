@@ -8,5 +8,7 @@ namespace Pfe.ChatbotApi.Core
         
         public DbSet<User> Users { get; set; }
         public object UpdateUser { get; internal set; }
+
+        public DbSet<GeoLocation> GeoLocs { get; set; }
     }
 }

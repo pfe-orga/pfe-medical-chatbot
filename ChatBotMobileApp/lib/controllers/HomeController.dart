@@ -29,6 +29,7 @@ class HomeController {
   final currentDateController = TextEditingController();
   final newDateController = TextEditingController();
   final roleController = TextEditingController();
+  final idController = TextEditingController();
 
   // -------------- Local Variables ---------------
   final List<NewUser> newUsers = [];
@@ -41,13 +42,13 @@ class HomeController {
   }
 
   Future<UserModel> me(String token) async {
-      await userApi.me(token).then((connectedUser) =>{
-      sharedResourcesService.setUserProfile(userProfile: connectedUser);
-      return connectedUser
-    }
-        
-    ).whenComplete(() => return null);
-      
+      var globalconnecteduser;
+      var result = await userApi.me(token).then((value) {
+        globalconnecteduser = value;
+        sharedResourcesService.setUserProfile(userProfile: value);
+        return value;
+      });
+      return result;
 
   }
 
@@ -89,20 +90,17 @@ class HomeController {
   }
 
   //List controller
-
   Future<List<ListModel>> getList() async {
     return await userApi.getList();
   }
-
   //Delete controller
-
   Future<void> deleteUser(int id) async {
     await userApi.deleteUser(id);
   }
 
 
-  Future<void> updateUser({required UserModel userModel}) async{
-      await userApi.updateUser(userModel);
+  Future<void> updateUser({required ListModel listModel}) async{
+      await userApi.updateUser(listModel);
 
   }
 

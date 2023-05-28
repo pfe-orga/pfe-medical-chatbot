@@ -7,12 +7,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../dependency_injection/service_locator.dart';
+import 'AdminWelcomePage.dart';
 import 'ChatScreen.dart';
+import 'DoctorsList.dart';
+import 'EmergencyCallScreen.dart';
 import 'List.dart';
 import 'LoginScreen.dart';
+import 'MedicationsReminderScreen.dart';
 import 'OpeningScreen.dart';
+import 'ProfileScreen.dart';
 import 'RegisterScreen.dart';
-import 'SanitasBotScreen.dart';
+import 'UsersList.dart';
 import 'WelcomeScreen.dart';
 
 Future<void> main() async {
@@ -28,7 +33,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home:  FirstScreen(),
+        home:  FirstScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

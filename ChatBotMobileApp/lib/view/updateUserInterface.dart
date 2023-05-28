@@ -57,11 +57,7 @@ class _UpdateUserState extends State<UpdateUser> {
       )
       ]
        ),
-
     ),
-
-
-
     );
   }
 }

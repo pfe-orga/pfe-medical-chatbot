@@ -63,7 +63,7 @@ class OpeningScreen extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 450,
+              top: 500,
               // bottom: 100,
               left: 20,
               right: 20,
@@ -129,7 +129,7 @@ class UnicornOutlineButton extends StatelessWidget {
         behavior: HitTestBehavior.translucent,
         onTap: _callback,
         child: Container(
-          constraints: BoxConstraints(minWidth: 200, minHeight: 55),
+          constraints: BoxConstraints(minWidth: 200, minHeight: 80),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,

@@ -245,7 +245,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => WelcomeScreen(),
+                                            builder: (context) => WelcomeScreen(email: homeController.emailController.text,
+                                              username: homeController.nameController.text),
                                           ),
                                         );
                                       } else if (selectedOption == 'doctor') {

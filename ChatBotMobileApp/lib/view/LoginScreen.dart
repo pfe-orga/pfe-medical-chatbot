@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../controllers/HomeController.dart';
 import '../dependency_injection/service_locator.dart';
+import 'AdminWelcomePage.dart';
+import 'ChatScreen.dart';
+import 'WelcomeScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -139,10 +142,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               const Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: const Text(
+                                padding:  EdgeInsets.only(left: 20),
+                                child:  Text(
                                   'Remember Me',
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     fontFamily: 'Poppins',
                                     color: Color(0xFFbdc9db),
                                   ),
@@ -173,15 +176,45 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onPressed: () {
 
                                   homeController.login().then((token) {
-                                    homeController.me(token).then((connectedUser) => {
-                                      if(connectedUser.Role)
+                                    homeController.me(token).then((connectedUser) {
+                                      print('Role: ${connectedUser.Role}'); // Print the value
+                                      switch(connectedUser.Role){
+                                        case 'admin':
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AdminWelcomeScreen(email: connectedUser.Email!,
+                                                username: connectedUser.UserName!,),
+                                            ),
+                                          );
+
+                                          break;
+                                        case 'patient':
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => WelcomeScreen(
+                                                email: connectedUser.Email!,
+                                                username: connectedUser.UserName!,
+                                              ),
+                                            ),
+                                          );
+                                          break;
+                                        case 'doctor':
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ChatScreenn(),
+                                            ),
+                                          );
+                                          break;
+                                      }
                                     });
-                                    print('value: ${token}'); // Print the value
                                   });
 
                                   if (_formKey.currentState!.validate()) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Processing Data')),
+                                      const SnackBar(content: Text('Processing Data')),
                                     );
                                   }
                                 },
@@ -190,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(height: 30),
                             const Padding(
                               padding: EdgeInsets.only(right: 70),
-                              child: const Text(
+                              child:  Text(
                                   'Sign up with social account',
                                    style: TextStyle(
                                   fontFamily: 'Poppins',

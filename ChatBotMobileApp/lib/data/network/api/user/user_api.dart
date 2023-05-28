@@ -67,7 +67,8 @@ class UserApi {
     try {
       final response = await dioClient.get("${Endpoints.SecurityEndpoints}/List");
       print(response.data);
-      return (response.data as List).map((e) => ListModel.fromJson(e)).toList();
+      final data = response.data as List<dynamic>;
+      return data.map((e) => ListModel.fromJson(e)).toList();
     } on DioError catch (e) {
       print(e);
       rethrow;
@@ -89,9 +90,9 @@ class UserApi {
       rethrow;
     }
   }
-  Future<UserModel> updateUser(UserModel userModel) async {
-    final response = await dioClient.put("${Endpoints.SecurityEndpoints}/Update", data: userModel.toJson());
-    return UserModel.fromJson(response.data);
+  Future<ListModel> updateUser(ListModel listModel) async {
+    final response = await dioClient.put("${Endpoints.SecurityEndpoints}/Update", data: listModel.toJson());
+    return ListModel.fromJson(response.data);
   }
 }
 

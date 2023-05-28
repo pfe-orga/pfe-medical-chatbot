@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
+import '../controllers/HomeController.dart';
+import '../dependency_injection/service_locator.dart';
 import 'ChatScreen.dart';
-import 'SanitasBotScreen.dart';
+import 'DoctorsList.dart';
+import 'MedicationsReminderScreen.dart';
+import 'ProfileScreen.dart';
 
 
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+class WelcomeScreen extends StatefulWidget {
+  final String email;
+  final String username;
+  const WelcomeScreen({Key? key,
+    required this.email,
+    required this.username}) : super(key: key);
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final homeController = getIt<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 310,
+                  top: 280,
                   // bottom: 100,
                   left: 20,
                   right: 20,
@@ -67,7 +81,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 550,
+                  top: 420,
                   // bottom: 100,
                   left: 20,
                   right: 20,
@@ -89,14 +103,68 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        // Get.to(RegisterScreen());
+                        Get.to(ProfileScreen(email: widget.email,
+                          username: widget.username)
+                        );
                       }
-
                   ),
                 ),
-
+                SizedBox(height: 10),
+                Positioned(
+                  top: 555,
+                  // bottom: 100,
+                  left: 20,
+                  right: 20,
+                  child: UnicornOutlineButton(
+                      color: const Color(0xFF15e0c3),
+                      strokeWidth: 10,
+                      radius: 24,
+                      gradient: const LinearGradient(colors: [Color(0xFF53abef), Color(0xFF4a7ff8)]),
+                      child: Text(
+                        'Set Medications Reminders',
+                        style: TextStyle(
+                          fontFamily: 'coolvetica',
+                          fontSize: 40,
+                          fontWeight: FontWeight.w300,
+                          foreground: Paint()
+                            ..color = Colors.white
+                            ..strokeWidth = 1
+                            ..style = PaintingStyle.fill,
+                        ),
+                      ),
+                      onPressed: () {
+                        Get.to(MedicationReminder());
+                      }
+                  ),
+                ),
+                Positioned(
+                  top: 695,
+                  // bottom: 100,
+                  left: 20,
+                  right: 20,
+                  child: UnicornOutlineButton(
+                      color: const Color(0xFF15e0c3),
+                      strokeWidth: 10,
+                      radius: 24,
+                      gradient: const LinearGradient(colors: [Color(0xFFea7239), Color(0xFFf8993c)]),
+                      child: Text(
+                        'Schedule Appointment',
+                        style: TextStyle(
+                          fontFamily: 'coolvetica',
+                          fontSize: 40,
+                          fontWeight: FontWeight.w300,
+                          foreground: Paint()
+                            ..color = Colors.white
+                            ..strokeWidth = 1
+                            ..style = PaintingStyle.fill,
+                        ),
+                      ),
+                      onPressed: () {
+                        Get.to(DoctorsList());
+                      }
+                  ),
+                ),
               ]
-
           )
       ),
     );
@@ -133,7 +201,7 @@ class UnicornOutlineButton extends StatelessWidget {
         behavior: HitTestBehavior.translucent,
         onTap: _callback,
         child: Container(
-          constraints: BoxConstraints(minWidth: 250, minHeight: 200),
+          constraints: BoxConstraints(minWidth: 120, minHeight: 120),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
