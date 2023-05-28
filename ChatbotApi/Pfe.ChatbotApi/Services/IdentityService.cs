@@ -2,6 +2,8 @@
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 
+
+
 namespace Pfe.ChatbotApi.Services
 {
     public class IdentityService
@@ -14,6 +16,8 @@ namespace Pfe.ChatbotApi.Services
             _httpContextAccessor = httpContextAccessor;
             _dataContext = dataContext;
 
+
+
             if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
                 var email = _httpContextAccessor.HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
@@ -22,10 +26,20 @@ namespace Pfe.ChatbotApi.Services
                 {
                     Email = email,
                     UserName = bdUser.Name,
-                    Password = bdUser.Password
+                    Password = bdUser.Password,
+                    Role = bdUser.Role
                 };
             }
 
+
+
+        }
+
+
+
+        public bool IsAdmin()
+        {
+            return ConnectedUser?.Role == Role.Admin;
         }
     }
     public class ConnectedUser
@@ -34,5 +48,6 @@ namespace Pfe.ChatbotApi.Services
         [JsonIgnore]
         public string Password { get; set; }
         public string Email { get; set; }
+        public string Role { get; set; }
     }
 }

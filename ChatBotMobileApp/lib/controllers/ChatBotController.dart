@@ -15,7 +15,7 @@ class ChatbotController {
   final  responseController = TextEditingController();
   final List<String> history = [];
 
-  // -------------- Methods ---------------
+  // -------------- Methods -------------------
 
   Future<ChatModel> getChatResponse(String inputText ) async {
      return await chatbotApi.getChatResponse(inputText);

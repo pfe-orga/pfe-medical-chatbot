@@ -2,9 +2,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import '../controllers/ChatBotController.dart';
+import '../controllers/GeolocationController.dart';
 import '../controllers/HomeController.dart';
 import '../data/network/api/chatbot/chatbot_api.dart';
 import '../data/network/api/dio_client.dart';
+import '../data/network/api/geolocation/geo_api.dart';
 import '../data/network/api/interceptors.dart';
 import '../data/network/api/user/user_api.dart';
 import '../data/network/api/user/weather_forcast_api.dart';
@@ -18,9 +20,12 @@ Future<void> setup() async {
   getIt.registerSingleton(DioClient(getIt<Dio>(), getIt<DioInterceptor>()));
   getIt.registerSingleton(UserApi(dioClient: getIt<DioClient>()));
   getIt.registerSingleton(ChatbotApi(dioClient: getIt<DioClient>()));
+  getIt.registerSingleton(GeoApi(dioClient: getIt<DioClient>()));
   getIt.registerSingleton(WfApi(dioClient: getIt<DioClient>()));
   getIt.registerSingleton<SharedResourcesService>(SharedResourcesService());
   getIt.registerSingleton(HomeController(userApi: getIt<UserApi>(), wfApi: getIt<WfApi>(), sharedResourcesService: getIt<SharedResourcesService>()));
   getIt.registerSingleton(ChatbotController(chatbotApi: getIt<ChatbotApi>(), sharedResourcesService: getIt<SharedResourcesService>()));
+  getIt.registerSingleton(GeoLocationController(geoApi: getIt<GeoApi>(), sharedResourcesService: getIt<SharedResourcesService>()));
+
 }
 

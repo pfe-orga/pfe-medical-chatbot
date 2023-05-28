@@ -70,8 +70,9 @@ class DioInterceptor extends Interceptor {
   
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    print('authorization header added to request');
-    if(options.path.contains("token")) {
+    if(!options.path.contains("token")) {
+      print('authorization header added to request');
+      print('Request url : ' + options.path);
       options.headers['Authorization'] =
       'Bearer ${sharedService.getUserToken()}';
     }

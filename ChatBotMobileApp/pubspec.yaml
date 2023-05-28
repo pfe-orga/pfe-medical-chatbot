@@ -42,6 +42,8 @@ dependencies:
   retrofit: any
   flutter:
     sdk: flutter
+  url_launcher: any
+  flutter_alarm_clock: any
   email_validator: any
   fullscreen: ^1.0.3
 
@@ -89,6 +91,18 @@ flutter:
     - lib/assets/_Path_ (1).png
     - lib/assets/gmail.png
     - lib/assets/firstscreenimage.png
+    - lib/assets/1.png
+    - lib/assets/chatbotbackground.png
+    - lib/assets/image (3).png
+    - lib/assets/image__4_-removebg-preview.png
+    - lib/assets/sanitaslogo.png
+    - lib/assets/profilebackground.png
+    - lib/assets/image_3.png
+    - lib/assets/usermanagementbackground.png
+    - lib/assets/logosearch2.png
+    - lib/assets/doctorlistbackground.png
+
+
   fonts:
     - family: SofiaProLight
       fonts:
@@ -96,6 +110,9 @@ flutter:
     - family: Poppins
       fonts:
         - asset: lib/fonts/Poppins-SemiBold.ttf
+    - family: coolvetica
+      fonts:
+        - asset: lib/fonts/coolvetica condensed rg.otf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

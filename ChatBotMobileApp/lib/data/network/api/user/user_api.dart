@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:pfemedicalchatbotapp/data/models/RegistrationModel.dart';
 import '../../../models/AddModel.dart';
@@ -24,10 +26,13 @@ class UserApi {
     }
   }
 
-  Future<UserModel> me() async {
+  Future<UserModel> me(String token) async {
     try {
-      final response = await dioClient.get("${Endpoints.SecurityEndpoints}/me");
-      return UserModel.fromJson(response.data);
+      final response = await dioClient.get("${Endpoints.SecurityEndpoints}/me",options: Options(headers: {"Authorization": "Bearer $token"}));
+
+      var x =  UserModel.fromJson(response.data);
+      print('x: ${x}');
+      return x;
     } on DioError catch (e) {
       print(e);
       rethrow;
@@ -46,7 +51,13 @@ class UserApi {
   register(RegistrationModel registrationModel) async {
     try {
       final response = await dioClient.post("${Endpoints.SecurityEndpoints}/Register",data: registrationModel.toJson());
-      return response.data;
+      // return response.data;
+      if (response.data != null) {
+        return response.data.toString();
+      } else {
+        return null; // Handle the case when the response data is null
+      }
+
     } on DioError catch (e) {
       print(e);
       rethrow;
@@ -56,7 +67,8 @@ class UserApi {
     try {
       final response = await dioClient.get("${Endpoints.SecurityEndpoints}/List");
       print(response.data);
-      return (response.data as List).map((e) => ListModel.fromJson(e)).toList();
+      final data = response.data as List<dynamic>;
+      return data.map((e) => ListModel.fromJson(e)).toList();
     } on DioError catch (e) {
       print(e);
       rethrow;
@@ -78,9 +90,9 @@ class UserApi {
       rethrow;
     }
   }
-  Future<UserModel> updateUser(UserModel userModel) async {
-    final response = await dioClient.put("${Endpoints.SecurityEndpoints}/Update", data: userModel.toJson());
-    return UserModel.fromJson(response.data);
+  Future<ListModel> updateUser(ListModel listModel) async {
+    final response = await dioClient.put("${Endpoints.SecurityEndpoints}/Update", data: listModel.toJson());
+    return ListModel.fromJson(response.data);
   }
 }
 

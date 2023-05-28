@@ -3,6 +3,7 @@ class ListModel {
   String? email;
   String? password;
   String? name;
+  String? role;
 
 
   ListModel({this.id, this.email,this.password,this.name});
@@ -12,6 +13,7 @@ class ListModel {
     name = json ['name'];
     email = json['email'];
     password = json['password'];
+    role = json['role'];
   }
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class ListModel {
     data['name'] =  name;
     data['email'] = email;
     data['password'] = password;
+    data['role'] = role;
     return data;
   }
 }

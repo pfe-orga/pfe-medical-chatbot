@@ -1,12 +1,24 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'LoginScreen.dart';
-import 'RegisterScreen.dart';
 
-class OpeningScreen extends StatelessWidget {
-  const OpeningScreen({Key? key}) : super(key: key);
+import 'ChatScreen.dart';
+import 'ProfileScreen.dart';
+import 'UsersList.dart';
 
+class AdminWelcomeScreen extends StatefulWidget {
+  final String email;
+  final String username;
+  const AdminWelcomeScreen({Key? key,
+    required this.email,
+    required this.username}) : super(key: key);
+
+  @override
+  State<AdminWelcomeScreen> createState() => _AdminWelcomeScreenState();
+}
+
+class _AdminWelcomeScreenState extends State<AdminWelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -34,50 +46,80 @@ class OpeningScreen extends StatelessWidget {
                 ),
               ),
             ),
+            // Positioned(
+            //   top: 310,
+            //   // bottom: 100,
+            //   left: 20,
+            //   right: 20,
+            //   child: UnicornOutlineButton(
+            //       color: const Color(0xFF15e0c3),
+            //       strokeWidth: 10,
+            //       radius: 24,
+            //       gradient: const LinearGradient(colors: [Color(0xFF51f8e6), Color(0xFF5eeaa2)]),
+            //       child: Text(
+            //         'Sanitas Bot',
+            //         style: TextStyle(
+            //           fontFamily: 'coolvetica',
+            //           fontSize: 40,
+            //           fontWeight: FontWeight.w300,
+            //           foreground: Paint()
+            //             ..color = Colors.white
+            //             ..strokeWidth = 1
+            //             ..style = PaintingStyle.fill,
+            //         ),
+            //       ),
+            //       onPressed: () {
+            //         Get.to(ChatScreenn());
+            //       }
+            //   ),
+            // ),
+            // // const SizedBox(height: 20),
+            // Positioned(
+            //   top: 480,
+            //   // bottom: 100,
+            //   left: 20,
+            //   right: 20,
+            //   child: UnicornOutlineButton(
+            //       color: const Color(0xFF15e0c3),
+            //       strokeWidth: 10,
+            //       radius: 24,
+            //       gradient: const LinearGradient(colors: [Color(0xFFc65af8), Color(0xFFc65af8)]),
+            //       child: Text(
+            //         'Profile',
+            //         style: TextStyle(
+            //           fontFamily: 'coolvetica',
+            //           fontSize: 40,
+            //           fontWeight: FontWeight.w300,
+            //           foreground: Paint()
+            //             ..color = Colors.white
+            //             ..strokeWidth = 1
+            //             ..style = PaintingStyle.fill,
+            //         ),
+            //       ),
+            //       onPressed: () {
+            //         Get.to(ProfileScreen(email: widget.email,
+            //             username: widget.username)
+            //         );
+            //       }
+            //   ),
+            // ),
+            const SizedBox(height: 20),
             Positioned(
-              top: 350,
-              // bottom: 100,
-              left: 20,
-              right: 20,
-              child: UnicornOutlineButton(
-                color: const Color(0xFF15e0c3),
-                strokeWidth: 2,
-                radius: 24,
-                gradient: const LinearGradient(colors: [Color(0xFF15e0c3), Color(0xFF15e0c3)]),
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 22,
-                    fontWeight: FontWeight.w100,
-                    foreground: Paint()
-                      ..color = Colors.white
-                      ..strokeWidth = 1
-                      ..style = PaintingStyle.fill,
-                  ),
-                ),
-                onPressed: () {
-                  Get.to(RegisterScreen());
-                  }
-
-              ),
-            ),
-            Positioned(
-              top: 500,
+              top: 400,
               // bottom: 100,
               left: 20,
               right: 20,
               child: UnicornOutlineButton(
                   color: const Color(0xFF15e0c3),
-                  strokeWidth: 2,
+                  strokeWidth: 10,
                   radius: 24,
-                  gradient: const LinearGradient(colors: [Color(0xFF15e0c3), Color(0xFF15e0c3)]),
+                  gradient: const LinearGradient(colors: [Color(0xFF53abef), Color(0xFF4a7ff8)]),
                   child: Text(
-                    'Log In',
+                    'User management',
                     style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 22,
-                      fontWeight: FontWeight.w100,
+                      fontFamily: 'coolvetica',
+                      fontSize: 40,
+                      fontWeight: FontWeight.w300,
                       foreground: Paint()
                         ..color = Colors.white
                         ..strokeWidth = 1
@@ -85,19 +127,16 @@ class OpeningScreen extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Get.to(LoginScreen());
+                    Get.to(UsersList());
                   }
-
               ),
             ),
-
           ],
         ),
       ),
     );
   }
 }
-
 class UnicornOutlineButton extends StatelessWidget {
   final _GradientPainter _painter;
   final Widget _child;
@@ -129,7 +168,7 @@ class UnicornOutlineButton extends StatelessWidget {
         behavior: HitTestBehavior.translucent,
         onTap: _callback,
         child: Container(
-          constraints: BoxConstraints(minWidth: 200, minHeight: 80),
+          constraints: BoxConstraints(minWidth: 200, minHeight: 200),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
