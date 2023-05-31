@@ -17,6 +17,7 @@ import 'MedicationsReminderScreen.dart';
 import 'OpeningScreen.dart';
 import 'ProfileScreen.dart';
 import 'RegisterScreen.dart';
+import 'SearchMedicationScreen.dart';
 import 'UsersList.dart';
 import 'WelcomeScreen.dart';
 
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-        home:  FirstScreen(),
+        home:  SearchMedication(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -21,7 +21,8 @@ using System.Text.Json;
 using System.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-
+using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -276,6 +277,33 @@ namespace Pfe.ChatbotApi.Controllers
 
         }
         [AllowAnonymous]
+        [HttpPost("medicineinfo")]
+        public async Task<Resp> GetMedicineInfoAsync(IFormFile file)
+        {
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:5000");
+
+            var requestContent = new MultipartFormDataContent();
+            using var stream = file.OpenReadStream();
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            byte[] fileBytes = memoryStream.ToArray();
+            string fileBase64 = Convert.ToBase64String(fileBytes);
+            Console.WriteLine("file:", fileBase64);
+            var request = new Request
+            {
+                input = fileBase64,
+            };
+
+            //requestContent.Add(new StringContent(fileBase64), "input", file.FileName);
+
+            var result = await client.PostAsync("/api/medbot", requestContent);
+            return JsonSerializer.Deserialize<Resp>(await result.Content.ReadAsStringAsync());
+
+        }
+
+
+        [AllowAnonymous]
         [HttpGet("showdoctor")]
         public async Task<List<string>> ShowDoctors(string place)
         {
@@ -297,6 +325,7 @@ namespace Pfe.ChatbotApi.Controllers
         { 
             return _context.GeoLocs.ToList();
         }
+
     }
 
     public class PythonRequest
@@ -331,6 +360,18 @@ namespace Pfe.ChatbotApi.Controllers
         public String Name { get; set; }
         [Required]
         public String Email { get; set; }
+    }
+   
+    public class Resp
+    {
+        public string medicine_name { get; set; }
+        public string price { get; set; }
+        public string date { get; set; }
+        public string error { get; set; }
+    }
+    public class Request
+    {
+        public string input { get; set;}
     }
 
 

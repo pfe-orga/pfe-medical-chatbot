@@ -27,5 +27,6 @@ Future<void> setup() async {
   getIt.registerSingleton(ChatbotController(chatbotApi: getIt<ChatbotApi>(), sharedResourcesService: getIt<SharedResourcesService>()));
   getIt.registerSingleton(GeoLocationController(geoApi: getIt<GeoApi>(), sharedResourcesService: getIt<SharedResourcesService>()));
 
+
 }
 
