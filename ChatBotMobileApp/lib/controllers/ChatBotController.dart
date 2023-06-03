@@ -26,11 +26,15 @@ class ChatbotController {
 
   Future<ChatModel> getChatResponse(String inputText ) async {
      return await chatbotApi.getChatResponse(inputText);
-
   }
   Future<MedicationModel> GetMedicineInfoAsync(File  image) async {
     return await chatbotApi.GetMedicineInfoAsync(image);
+  }
 
+
+
+  Future<MedicationModel> GetMedicineResponse(String text) async {
+    return await chatbotApi.GetMedicineResponse(text);
   }
 
 }

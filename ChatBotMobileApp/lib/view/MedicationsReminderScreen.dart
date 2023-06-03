@@ -54,7 +54,7 @@ class _MedicationReminderState extends State<MedicationReminder> {
           children: <Widget>[
             Flexible(
               flex: 3,
-              child: TopContainer(),
+              child: TopContainer(totalAlarms: alarms.length),
             ),
             SizedBox(height: 10),
             Flexible(
@@ -81,7 +81,6 @@ class _MedicationReminderState extends State<MedicationReminder> {
           shape: BoxShape.circle,
         ),
         child: FloatingActionButton(
-
           elevation: 4,
           child: const Icon(Icons.add),
           onPressed: () {
@@ -94,7 +93,9 @@ class _MedicationReminderState extends State<MedicationReminder> {
 }
 
 class TopContainer extends StatelessWidget {
-  const TopContainer({Key? key}) : super(key: key);
+  final int totalAlarms;
+
+  const TopContainer({Key? key, required this.totalAlarms}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -117,35 +118,37 @@ class TopContainer extends StatelessWidget {
       ),
       width: double.infinity,
       height: 200,
-      child: Column(
-        children: const <Widget>[
-          Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Text(
-              "Mediminder",
-              style: TextStyle(
-                fontFamily: "coolvetica",
-                fontSize: 64,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          Divider(
-            color: Color(0xFFB0F3CB),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 12.0),
-            child: Center(
+      child: SingleChildScrollView(
+        child: Column(
+          children:  <Widget>[
+            Padding(
+              padding: EdgeInsets.only(bottom: 20),
               child: Text(
-                "Number of Mediminders",
+                "Mediminder",
                 style: TextStyle(
-                  fontSize: 17,
+                  fontFamily: "coolvetica",
+                  fontSize: 64,
                   color: Colors.white,
                 ),
               ),
             ),
-          ),
-        ],
+            Divider(
+              color: Color(0xFFB0F3CB),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20.0),
+              child: Center(
+                child: Text(
+                  "Number of Mediminders: $totalAlarms",
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

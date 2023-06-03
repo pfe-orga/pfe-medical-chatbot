@@ -3,214 +3,136 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import '../controllers/ChatBotController.dart';
-import '../data/models/MedicationModel.dart';
 import '../dependency_injection/service_locator.dart';
+class MedicationPhoto extends StatefulWidget {
+  final Function(String) onMedicineInfoReceived; // Callback function
 
-class SearchMedication extends StatefulWidget {
+  const MedicationPhoto({Key? key, required this.onMedicineInfoReceived}) : super(key: key);
+
+
   @override
-  _SearchMedicationState createState() => _SearchMedicationState();
+  State<MedicationPhoto> createState() => _MedicationPhotoState();
 }
 
-class _SearchMedicationState extends State<SearchMedication> {
+class _MedicationPhotoState extends State<MedicationPhoto> {
   final chatbotController = getIt<ChatbotController>();
+  late File imageFile;
+  List<String> medicineList = [];
 
-  void _showBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-      ),
-      context: context,
-      builder: (BuildContext context) {
-        return ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-          child: Container(
-            height: 300, // Fixed height for the bottom sheet
-            child: SelectPhotoOptionsScreen(
-              onTap: (ImageSource source) {
-                _handleImageSelection(context, source);
-              },
-              chatbotController: chatbotController, // Pass the chatbotController instance
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _handleImageSelection(BuildContext context, ImageSource source) {
-    // Handle image selection here
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFf64376), Color(0xFFeb4eaa)],
-            ),
-          ),
-        ),
-      ),
-      body: Container(
-        color: const Color(0xFFF6F8FC),
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              flex: 3,
-              child: TopContainer(),
-            ),
-            SizedBox(height: 10),
-          ],
-        ),
-      ),
 
-      floatingActionButton: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFf64376), Color(0xFFeb4eaa)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-          shape: BoxShape.circle,
-        ),
-        child: FloatingActionButton(
-          elevation: 4,
-          backgroundColor: Color(0xFFf64376),
-          child: const Icon(Icons.camera_alt),
-          onPressed: () {
-            _showBottomSheet(context);
-          },
-        ),
-      ),
-    );
-  }
-}
+      body: Center(
+        child: Stack(
+          alignment: AlignmentDirectional.topCenter,
+          clipBehavior: Clip.none,
+          children: [
 
-class TopContainer extends StatefulWidget {
-  const TopContainer({Key? key}) : super(key: key);
+            Positioned(
+              top: 10,
+                child: Container(
+              width: 80,
+              height: 7,
 
-  @override
-  State<TopContainer> createState() => _TopContainerState();
-}
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.black,
 
-class _TopContainerState extends State<TopContainer> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFFf64376), Color(0xFFeb4eaa)],
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.elliptical(50, 27),
-          bottomRight: Radius.elliptical(50, 27),
-        ),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 5,
-            color: Colors.grey,
-            offset: Offset(0, 3.5),
-          ),
-        ],
-      ),
-      width: double.infinity,
-      height: 190,
-      child: Column(
-        children: const <Widget>[
-          Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Center(
-              child: Text(
-                'Search Medication',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
+                  ),
+            )),
+            Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white, // Button background color
+                  elevation: 7, // Add shadow
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 100),
+                ),
+                onPressed: () {
+                  _getFromCamera();
+                },
+                icon: Icon(
+                  Icons.camera_alt,
+                  color: Colors.black,
+                ),
+                label: Text(
+                  'Take a Photo',
+                  style: TextStyle(
+                    color: Colors.black,
+                      fontFamily: 'Poppins'
+                  ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: Text(
-              'Upload an image of your medication to get information',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+
+
+              SizedBox(height: 15),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  elevation: 7,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 70),
+                ),
+                onPressed: () {
+                  _getFromGallery();
+                },
+                icon: const Icon(Icons.photo_library,
+                  color: Colors.black, // Icon color
+                ),
+                label: const Text('Choose from Gallery',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Poppins'
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+          ]
+        ),
       ),
     );
+
   }
-}
-
-class SelectPhotoOptionsScreen extends StatefulWidget {
-  final Function(ImageSource source) onTap;
-  final ChatbotController chatbotController; // Add this line
-
-  const SelectPhotoOptionsScreen({
-    Key? key,
-    required this.onTap,
-    required this.chatbotController, // Add this line
-  }) : super(key: key);
-
-  @override
-  State<SelectPhotoOptionsScreen> createState() =>
-      _SelectPhotoOptionsScreenState();
-}
-
-class _SelectPhotoOptionsScreenState extends State<SelectPhotoOptionsScreen> {
-  File? _profilePicture;
-  MedicationModel? _medication;
-
-  Future<void> handleImageSelection(ImageSource source) async {
-    final pickedFile = await ImagePicker().pickImage(source: source);
+  _getFromGallery() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
     if (pickedFile != null) {
-      setState(() {
-        _profilePicture = File(pickedFile.path);
-      });
-      try {
-        _medication =
-        await widget.chatbotController.GetMedicineInfoAsync(_profilePicture!);
-      } catch (e) {
-        // Handle error if any
-        print(e);
-      }
+       imageFile = File(pickedFile.path);
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Use the _medication instance as needed
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () => widget.onTap(ImageSource.camera),
-            child: ListTile(
-              leading: Icon(Icons.camera),
-              title: Text('Take a Photo'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => widget.onTap(ImageSource.gallery),
-            child: ListTile(
-              leading: Icon(Icons.image),
-              title: Text('Choose from Gallery'),
-            ),
-          ),
-        ],
-      ),
+  _getFromCamera() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera,
+      maxWidth: 1800,
+      maxHeight: 1800,
     );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+        print('imageFile: ${imageFile}');
+      });
+      final medicineInfo = await chatbotController.GetMedicineInfoAsync(
+          imageFile);
+      final response = '${medicineInfo.medicine_name ?? ''}, ${medicineInfo
+          .price ?? ''}, ${medicineInfo.date ?? ''}';
+      print('response: ${response}');
+      widget.onMedicineInfoReceived(
+          response); // Call the callback function with the response    }
+    }
   }
+
 }

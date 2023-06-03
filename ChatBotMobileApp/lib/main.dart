@@ -6,20 +6,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../dependency_injection/service_locator.dart';
-import 'AdminWelcomePage.dart';
-import 'ChatScreen.dart';
-import 'DoctorsList.dart';
-import 'EmergencyCallScreen.dart';
-import 'List.dart';
-import 'LoginScreen.dart';
-import 'MedicationsReminderScreen.dart';
-import 'OpeningScreen.dart';
-import 'ProfileScreen.dart';
-import 'RegisterScreen.dart';
-import 'SearchMedicationScreen.dart';
-import 'UsersList.dart';
-import 'WelcomeScreen.dart';
+import 'dependency_injection/service_locator.dart';
+import 'view/AdminWelcomePage.dart';
+import 'view/ChatScreen.dart';
+import 'view/DoctorsList.dart';
+import 'view/EmergencyCallScreen.dart';
+import 'view/List.dart';
+import 'view/LoginScreen.dart';
+import 'view/MedicationsReminderScreen.dart';
+import 'view/OpeningScreen.dart';
+import 'view/ProfileScreen.dart';
+import 'view/RegisterScreen.dart';
+import 'view/SearchMedicationScreen.dart';
+import 'view/UsersList.dart';
+import 'view/WelcomeScreen.dart';
 
 Future<void> main() async {
   await setup();
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-        home:  SearchMedication(),
+        home:  SearchMedicationScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../controllers/GeolocationController.dart';
 import '../data/models/GeoModel.dart';
 import '../dependency_injection/service_locator.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class DoctorsList extends StatefulWidget {
   const DoctorsList({Key? key}) : super(key: key);
@@ -21,6 +22,15 @@ class _DoctorsListState extends State<DoctorsList> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+  }
+  @override
+  void _launchPhone(String phoneNumber) async {
+    final url = 'tel:$phoneNumber';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -218,6 +228,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                   IconButton(
                                       onPressed: (){
                                         geoLocationController.placeController.text = doctor.place ?? '';
+
                                         showDialog(
                                             context: context,
                                             builder: (BuildContext context){
@@ -228,6 +239,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                                     decoration: const InputDecoration(
                                                       hintText: "Doctor's Location",
                                                     ),
+
                                                   )
                                               );
 
@@ -239,6 +251,8 @@ class _DoctorsListState extends State<DoctorsList> {
                                   IconButton(
                                     onPressed: (){
                                       geoLocationController.numeroController.text = doctor.numero ?? '';
+                                      var phoneNumber = geoLocationController.numeroController.text;
+                                      _launchPhone(phoneNumber);
                                       showDialog(
                                           context: context,
                                           builder: (BuildContext context){

@@ -29,6 +29,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_map: any
   image_picker: any
   localstorage: any
   get_it: any
@@ -102,6 +103,7 @@ flutter:
     - lib/assets/usermanagementbackground.png
     - lib/assets/logosearch2.png
     - lib/assets/doctorlistbackground.png
+    - lib/assets/_Group_.png
 
 
   fonts:
@@ -110,7 +112,7 @@ flutter:
         - asset: lib/fonts/SofiaPro-Light.ttf
     - family: Poppins
       fonts:
-        - asset: lib/fonts/Poppins-SemiBold.ttf
+        - asset: lib/fonts/Poppins-Regular.ttf
     - family: coolvetica
       fonts:
         - asset: lib/fonts/coolvetica condensed rg.otf

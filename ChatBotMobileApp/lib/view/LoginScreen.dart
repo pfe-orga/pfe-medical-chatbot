@@ -27,244 +27,246 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     bool rememberMe = false;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: FutureBuilder<bool>(
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            final error = snapshot.error;
-            return Center(
-              child: Text(
-                "Error: " + error.toString(),
-              ),
-            );
-          }
-          final Size screenSize = MediaQuery.of(context).size;
-          return SizedBox(
-            width: screenSize.width,
-            height: screenSize.height,
-            child: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFc0c3c9).withOpacity(1.0),
-                    spreadRadius: 5,
-                    blurRadius: 30,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-                image: DecorationImage(
-                  image: AssetImage("lib/assets/kawiiui-ai.png"),
-                  fit: BoxFit.fill,
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: FutureBuilder<bool>(
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              final error = snapshot.error;
+              return Center(
+                child: Text(
+                  "Error: " + error.toString(),
                 ),
-              ),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 420),
-                      Align(
-                        alignment: Alignment.center,
-                        child: TextFieldContainer(
-                          child: TextFormField(
-                            controller: homeController.emailController,
+              );
+            }
+            final Size screenSize = MediaQuery.of(context).size;
+            return SizedBox(
+              width: screenSize.width,
+              height: screenSize.height,
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFc0c3c9).withOpacity(1.0),
+                      spreadRadius: 5,
+                      blurRadius: 30,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                  image: DecorationImage(
+                    image: AssetImage("lib/assets/kawiiui-ai.png"),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 420),
+                        Align(
+                          alignment: Alignment.center,
+                          child: TextFieldContainer(
+                            child: TextFormField(
+                              controller: homeController.emailController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your username';
+                                }
+                                return null;
+                              },
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,  // Remove underline
+                                hintText: 'e-mail',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFF93aece),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(vertical: 10),
+                            ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: TextFieldContainer(child: TextFormField(
+                            controller: homeController.passwordController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your username';
                               }
                               return null;
                             },
+                            obscureText: true,
                             decoration: const InputDecoration(
                               border: InputBorder.none,  // Remove underline
-                              hintText: 'e-mail',
+                              hintText: 'password',
                               hintStyle: TextStyle(
                                 fontFamily: 'Poppins',
                                 color: Color(0xFF93aece),
                               ),
                               contentPadding: EdgeInsets.symmetric(vertical: 10),
-                          ),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: TextFieldContainer(child: TextFormField(
-                          controller: homeController.passwordController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your username';
-                            }
-                            return null;
-                          },
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,  // Remove underline
-                            hintText: 'password',
-                            hintStyle: TextStyle(
-                              fontFamily: 'Poppins',
-                              color: Color(0xFF93aece),
                             ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 10),
+                          )
                           ),
-                        )
                         ),
-                      ),
-                      SizedBox(height: 15),
-                      Container(
-                        margin: EdgeInsets.only(left: 60),
-                        child: Column(
-                          children: [
-                           Row(
+                        SizedBox(height: 15),
+                        Container(
+                          margin: EdgeInsets.only(left: 60),
+                          child: Column(
                             children: [
-                              ClipOval(
-                                child: Material(
-                                  color: Color(0xFF56f2ca),
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        rememberMe = !rememberMe;
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: rememberMe
-                                          ? Image.asset(
-                                        'lib/assets/remembermeicon.png',
-                                        width: 20,
-                                        height: 20,
-                                        color: Colors.black,
-                                      )
-                                          : Container(),
+                             Row(
+                              children: [
+                                ClipOval(
+                                  child: Material(
+                                    color: Color(0xFF56f2ca),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          rememberMe = !rememberMe;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: rememberMe
+                                            ? Image.asset(
+                                          'lib/assets/remembermeicon.png',
+                                          width: 20,
+                                          height: 20,
+                                          color: Colors.black,
+                                        )
+                                            : Container(),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const Padding(
-                                padding:  EdgeInsets.only(left: 20),
-                                child:  Text(
-                                  'Remember Me',
-                                  style:  TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFFbdc9db),
+                                const Padding(
+                                  padding:  EdgeInsets.only(left: 20),
+                                  child:  Text(
+                                    'Remember Me',
+                                    style:  TextStyle(
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFFbdc9db),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                            SizedBox(height: 30),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 70),
-                              child: UnicornOutlineButton(
-                                color: const Color(0xFF15e0c3),
-                                strokeWidth: 2,
-                                radius: 24,
-                                gradient: const LinearGradient(colors: [Color(0xFF15e0c3), Color(0xFF15e0c3)]),
-                                child: Text(
-                                  'Log In',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w100,
-                                    foreground: Paint()
-                                      ..color = Colors.white
-                                      ..strokeWidth = 1
-                                      ..style = PaintingStyle.fill,
+                              ],
+                            ),
+                              SizedBox(height: 30),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 70),
+                                child: UnicornOutlineButton(
+                                  color: const Color(0xFF15e0c3),
+                                  strokeWidth: 2,
+                                  radius: 24,
+                                  gradient: const LinearGradient(colors: [Color(0xFF15e0c3), Color(0xFF15e0c3)]),
+                                  child: Text(
+                                    'Log In',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w100,
+                                      foreground: Paint()
+                                        ..color = Colors.white
+                                        ..strokeWidth = 1
+                                        ..style = PaintingStyle.fill,
+                                    ),
                                   ),
-                                ),
-                                onPressed: () {
+                                  onPressed: () {
 
-                                  homeController.login().then((token) {
-                                    homeController.me(token).then((connectedUser) {
-                                      print('Role: ${connectedUser.Role}'); // Print the value
-                                      switch(connectedUser.Role){
-                                        case 'admin':
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => AdminWelcomeScreen(email: connectedUser.Email!,
-                                                username: connectedUser.UserName!,),
-                                            ),
-                                          );
-
-                                          break;
-                                        case 'patient':
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => WelcomeScreen(
-                                                email: connectedUser.Email!,
-                                                username: connectedUser.UserName!,
+                                    homeController.login().then((token) {
+                                      homeController.me(token).then((connectedUser) {
+                                        print('Role: ${connectedUser.Role}'); // Print the value
+                                        switch(connectedUser.Role){
+                                          case 'admin':
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => AdminWelcomeScreen(email: connectedUser.Email!,
+                                                  username: connectedUser.UserName!,),
                                               ),
-                                            ),
-                                          );
-                                          break;
-                                        case 'doctor':
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ChatScreenn(),
-                                            ),
-                                          );
-                                          break;
-                                      }
-                                    });
-                                  });
+                                            );
 
-                                  if (_formKey.currentState!.validate()) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Processing Data')),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 30),
-                            const Padding(
-                              padding: EdgeInsets.only(right: 70),
-                              child:  Text(
-                                  'Sign up with social account',
-                                   style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFFa9bfd9),
+                                            break;
+                                          case 'patient':
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => WelcomeScreen(
+                                                  email: connectedUser.Email!,
+                                                  username: connectedUser.UserName!,
+                                                ),
+                                              ),
+                                            );
+                                            break;
+                                          case 'doctor':
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ChatScreenn(),
+                                              ),
+                                            );
+                                            break;
+                                        }
+                                      });
+                                    });
+
+                                    if (_formKey.currentState!.validate()) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Processing Data')),
+                                      );
+                                    }
+                                  },
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            Padding(
-                              padding: EdgeInsets.only(right: 70),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                      onTap: () {
-                                      // Get.to(Login());
+                              const SizedBox(height: 30),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 70),
+                                child:  Text(
+                                    'Sign up with social account',
+                                     style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFFa9bfd9),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: EdgeInsets.only(right: 70),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                        onTap: () {
+                                        // Get.to(Login());
+                                     },
+                                     child: Image.asset('lib/assets/facebook.png',width: 60,height: 60),
+                                  ),
+                                 InkWell(
+                                  onTap: () {
+                                   // Get.to(Login());
                                    },
-                                   child: Image.asset('lib/assets/facebook.png',width: 60,height: 60),
+                                   child: Image.asset('lib/assets/gmail.png',width: 60,height: 60),
+                                 )
+                                  ],
                                 ),
-                               InkWell(
-                                onTap: () {
-                                 // Get.to(Login());
-                                 },
-                                 child: Image.asset('lib/assets/gmail.png',width: 60,height: 60),
-                               )
-                                ],
-                              ),
-                            )
-                          ]
+                              )
+                            ]
+                          ),
+
                         ),
 
-                      ),
-
-                      // Add more form fields or widgets here
-                    ],
+                        // Add more form fields or widgets here
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

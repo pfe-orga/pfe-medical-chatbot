@@ -1,37 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import '../controllers/ChatBotController.dart';
-import '../dependency_injection/service_locator.dart';
 import 'galleryScreen.dart';
 
-class SearchMedication extends StatefulWidget {
+class SearchMedicationScreen extends StatefulWidget {
   @override
-  _SearchMedicationState createState() => _SearchMedicationState();
+  _SearchMedicationScreenState createState() => _SearchMedicationScreenState();
 }
 
-class _SearchMedicationState extends State<SearchMedication> {
-  final chatbotController = getIt<ChatbotController>();
+class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
+  String? medicineInfo;
 
-  File? _profilePicture;
+  void _handleMedicineInfoReceived(String response) {
+    setState(() {
+      medicineInfo = response;
+    });
+  }
+
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
       ),
       context: context,
-
       builder: (BuildContext context) {
-        return SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Container(
-            height: 390, // Set the desired height here
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-              child: SelectPhotoOptionsScreen(onTap: (ImageSource source) {
-              },
-              ),
-            ),
+        return Container(
+          height: 200,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+            child: MedicationPhoto(onMedicineInfoReceived: _handleMedicineInfoReceived),
           ),
         );
       },
@@ -40,54 +35,95 @@ class _SearchMedicationState extends State<SearchMedication> {
 
   @override
   Widget build(BuildContext context) {
-    File? _profilePicture;
-
+    final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFf64376), Color(0xFFeb4eaa)],
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            SizedBox(
+              width: screenSize.width,
+              height: screenSize.height,
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFc0c3c9).withOpacity(1.0),
+                      spreadRadius: 5,
+                      blurRadius: 30,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                  image: DecorationImage(
+                    image: AssetImage("lib/assets/_Group_.png"),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-      body: Container(
-        color: const Color(0xFFF6F8FC),
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              flex: 3,
-              child: TopContainer(),
+            Positioned(
+              top: 75,
+              left: 0,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: TextFieldContainer(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Search for',
+                              hintStyle: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF93aece),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(vertical: 10),
+                              isCollapsed: true,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.search, color: Color(0xFF93aece)),
+                          onPressed: () {
+                            // Perform search if needed
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
-            SizedBox(height: 10),
-            // Flexible(
-            //   flex: 7,
-            //   child: ListView.builder(
-            //
-            //
-            //   ),
-            // ),
+            Positioned(
+              top: 100,
+              left: 0,
+              right: 0,
+              child: Text(
+                medicineInfo ?? '', // Display the medicine information
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+            ),
           ],
         ),
       ),
-
       floatingActionButton: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFf64376), Color(0xFFeb4eaa)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+          color: Color(0xFFf64375), // Change the color here
           shape: BoxShape.circle,
         ),
         child: FloatingActionButton(
           elevation: 4,
-          backgroundColor: Color(0xFFf64376),
-          child: const Icon(Icons.camera_alt),
+          backgroundColor: Color(0xFFf64375),
+          child: const Icon(Icons.camera_alt_outlined),
           onPressed: () {
             _showBottomSheet(context);
           },
@@ -97,59 +133,24 @@ class _SearchMedicationState extends State<SearchMedication> {
   }
 }
 
-class TopContainer extends StatefulWidget {
-  const TopContainer({Key? key}) : super(key: key);
 
-  @override
-  State<TopContainer> createState() => _TopContainerState();
-}
-
-class _TopContainerState extends State<TopContainer> {
+class TextFieldContainer extends StatelessWidget {
+  final Widget child;
+  const TextFieldContainer({Key? key, required this.child}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFFf64376), Color(0xFFeb4eaa)],
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.elliptical(50, 27),
-          bottomRight: Radius.elliptical(50, 27),
-        ),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 5,
-            color: Colors.grey,
-            offset: Offset(0, 3.5),
-          ),
-        ],
+      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      width: 230,
+      height: 50,
+      decoration: BoxDecoration(
+        color: const Color(0xFFffffff),
+        borderRadius: BorderRadius.circular(20),
       ),
-      width: double.infinity,
-      height: 190,
-      child: Column(
-        children: const <Widget>[
-          Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Text(
-              "search medication",
-              style: TextStyle(
-                fontFamily: "coolvetica",
-                fontSize: 64,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          Divider(
-            color: Color(0xFFf64376),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 12.0),
-
-
-          ),
-        ],
-      ),
-
+      child: child,
     );
   }
 }
+
+
