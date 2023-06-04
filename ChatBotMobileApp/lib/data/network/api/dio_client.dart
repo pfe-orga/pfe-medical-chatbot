@@ -120,7 +120,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "http://localhost:50524/";
+  static const String baseUrl = "https://e7c5-197-240-45-82.ngrok-free.app";
 
   // receiveTimeout
   static const int receiveTimeout = 150000;
@@ -131,7 +131,7 @@ class Endpoints {
   static const String Users = 'Users';
   static const String weatherForecast = 'WeatherForecast';
   static const String postsEndpoints = 'posts';
-  static const String SecurityEndpoints = 'Security';
+  static const String SecurityEndpoints = '$baseUrl/Security';
 
 }
 

@@ -12,6 +12,7 @@ namespace Pfe.ChatbotApi.Core
         public required String Email { get; set; }
         [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", ErrorMessage = "Invalid password")]
         public required String Password { get; set; }
+
         public required string Role { get; set; }
 
 

@@ -21,6 +21,8 @@ using System.Text.Json;
 using System.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -265,16 +267,60 @@ namespace Pfe.ChatbotApi.Controllers
         public async Task<PythonResponse> GetChatbotResponseAsync(string text)
         {
             using var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5000");
+            client.BaseAddress = new Uri("https://2f49-197-240-45-82.ngrok-free.app");
             var request = new PythonRequest
             {
                 input_text = text,
             };
             var data = new System.Net.Http.StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
             var result = await client.PostAsync("/api/chatbot", data);
-            return JsonSerializer.Deserialize<PythonResponse>(await result.Content.ReadAsStringAsync());
+            var content = await result.Content.ReadAsStringAsync();
+            Console.Write(content);
+            return JsonSerializer.Deserialize<PythonResponse>(content);
 
         }
+        [AllowAnonymous]
+        [HttpPost("medicineinfo")]
+        public async Task<Resp> GetMedicineInfoAsync(IFormFile file)
+        {
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri("https://2f49-197-240-45-82.ngrok-free.app");
+
+            var requestContent = new MultipartFormDataContent();
+            using var stream = file.OpenReadStream();
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            byte[] fileBytes = memoryStream.ToArray();
+            string fileBase64 = "data:image/png;base64,".Replace("png", file.FileName.Split(".")[1]) + Convert.ToBase64String(fileBytes);       
+            Console.WriteLine("file:", fileBase64);
+            var request = new Request
+            {
+                input = fileBase64,
+            };
+
+            var data = new System.Net.Http.StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            var result = await client.PostAsync("/api/medbot", data);
+            return JsonSerializer.Deserialize<Resp>(await result.Content.ReadAsStringAsync());
+
+        }
+        [AllowAnonymous]
+        [HttpPost("medicineinfotext")]
+        public async Task<Resp> GetMedicineResponse(string text)
+        {
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:5000");
+            var request = new Request
+            {
+                input = text,
+            };
+            var data = new System.Net.Http.StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            var result = await client.PostAsync("/api/medbot", data);
+            return JsonSerializer.Deserialize<Resp>(await result.Content.ReadAsStringAsync());
+
+        }
+
+
+
         [AllowAnonymous]
         [HttpGet("showdoctor")]
         public async Task<List<string>> ShowDoctors(string place)
@@ -297,6 +343,7 @@ namespace Pfe.ChatbotApi.Controllers
         { 
             return _context.GeoLocs.ToList();
         }
+
     }
 
     public class PythonRequest
@@ -331,6 +378,18 @@ namespace Pfe.ChatbotApi.Controllers
         public String Name { get; set; }
         [Required]
         public String Email { get; set; }
+    }
+   
+    public class Resp
+    {
+        public string medicine_name { get; set; }
+        public string price { get; set; }
+        public string date { get; set; }
+        public string error { get; set; }
+    }
+    public class Request
+    {
+        public string input { get; set;}
     }
 
 

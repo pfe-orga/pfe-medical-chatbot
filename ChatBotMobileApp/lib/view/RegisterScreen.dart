@@ -17,10 +17,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   String _errorMessage = '';
   String? selectedOption;
+  final FocusNode _emailFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
     selectedOption = 'patient';
+  }
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -30,262 +38,281 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String _errorMessage = '';
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: FutureBuilder<bool>(
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            final error = snapshot.error;
-            return Center(
-              child: Text(
-                "Error: $error",
-              ),
-            );
-          }
-          final Size screenSize = MediaQuery.of(context).size;
-          return SizedBox(
-            width: screenSize.width,
-            height: screenSize.height,
-            child: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFc0c3c9).withOpacity(1.0),
-                    spreadRadius: 5,
-                    blurRadius: 30,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-                image: const DecorationImage(
-                  image: AssetImage("lib/assets/kawiiui-ai.png"),
-                  fit: BoxFit.fill,
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: FutureBuilder<bool>(
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              final error = snapshot.error;
+              return Center(
+                child: Text(
+                  "Error: $error",
                 ),
-              ),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 420),
-                      Align(
-                        alignment: Alignment.center,
-                        child: TextFieldContainer(
-                          child: TextFormField(
-                            controller: homeController.nameController,
+              );
+            }
+            final Size screenSize = MediaQuery.of(context).size;
+            return SizedBox(
+              width: screenSize.width,
+              height: screenSize.height,
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFc0c3c9).withOpacity(1.0),
+                      spreadRadius: 5,
+                      blurRadius: 30,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                  image: const DecorationImage(
+                    image: AssetImage("lib/assets/kawiiui-ai.png"),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 420),
+                        Align(
+                          alignment: Alignment.center,
+                          child: TextFieldContainer(
+                            child: TextFormField(
+                              controller: homeController.nameController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your username';
+                                }
+                                return null;
+                              },
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,  // Remove underline
+                                hintText: 'username',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFF93aece),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(vertical: 10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: TextFieldContainer(
+                            child: TextFormField(
+                              focusNode: _emailFocusNode,
+                              //focusNode: FocusNode(),
+                              controller: homeController.emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              onTap: () {
+                                if (!_emailFocusNode.hasFocus) {
+                                  _emailFocusNode.requestFocus();
+                                }
+                              },
+                              onChanged: (val){
+                                validateEmail(val);
+                              },
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please enter your username';
+                              //   }
+                              //   return null;
+                              // },
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,  // Remove underline
+                                hintText: 'e-mail',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFF93aece),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(vertical: 10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: TextFieldContainer(child: TextFormField(
+                            controller: homeController.passwordController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your username';
                               }
                               return null;
                             },
+                            obscureText: true,
                             decoration: const InputDecoration(
                               border: InputBorder.none,  // Remove underline
-                              hintText: 'username',
+                              hintText: 'password',
                               hintStyle: TextStyle(
                                 fontFamily: 'Poppins',
                                 color: Color(0xFF93aece),
                               ),
                               contentPadding: EdgeInsets.symmetric(vertical: 10),
                             ),
+                          )
                           ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: TextFieldContainer(
-                          child: TextFormField(
-                            controller: homeController.emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            onChanged: (val){
-                              validateEmail(val);
-                            },
-                            // validator: (value) {
-                            //   if (value == null || value.isEmpty) {
-                            //     return 'Please enter your username';
-                            //   }
-                            //   return null;
-                            // },
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,  // Remove underline
-                              hintText: 'e-mail',
-                              hintStyle: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Color(0xFF93aece),
+                        Align(
+                          alignment: Alignment.center,
+                          child: TextFieldContainer(
+                            child: DropdownButtonFormField<String>(
+                              value: selectedOption,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selectedOption = newValue;
+                                  homeController.roleController.text = newValue.toString();
+                                });
+                                print("Selected Option: $selectedOption");
+                              },
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Select an option',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFF93aece),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(vertical: 10),
                               ),
-                              contentPadding: EdgeInsets.symmetric(vertical: 10),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: 'patient',
+                                  child: Text('Patient',
+                                     style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFF93aece),
+                                    ),
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'doctor',
+                                  child: Text('Doctor',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFF93aece),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: TextFieldContainer(child: TextFormField(
-                          controller: homeController.passwordController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your username';
-                            }
-                            return null;
-                          },
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,  // Remove underline
-                            hintText: 'password',
-                            hintStyle: TextStyle(
-                              fontFamily: 'Poppins',
-                              color: Color(0xFF93aece),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 10),
-                          ),
-                        )
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: TextFieldContainer(
-                          child: DropdownButtonFormField<String>(
-                            value: selectedOption,
-                            onChanged: (newValue) {
-                              setState(() {
-                                selectedOption = newValue;
-                                homeController.roleController.text = newValue.toString();
-                              });
-                              print("Selected Option: $selectedOption");
-                            },
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Select an option',
-                              hintStyle: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Color(0xFF93aece),
-                              ),
-                              contentPadding: EdgeInsets.symmetric(vertical: 10),
-                            ),
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'patient',
-                                child: Text('Patient'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'doctor',
-                                child: Text('Doctor'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
 
-                      const SizedBox(height: 10),
-                      Container(
-                        margin: const EdgeInsets.only(left: 60),
-                        child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  ClipOval(
-                                    child: Material(
-                                      color: Color(0xFF56f2ca),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            rememberMe = !rememberMe;
-                                          });
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8),
-                                          child: rememberMe
-                                              ? Image.asset(
-                                            'lib/assets/remembermeicon.png',
-                                            width: 20,
-                                            height: 20,
-                                            color: Colors.black,
-                                          )
-                                              : Container(),
+                        const SizedBox(height: 10),
+                        Container(
+                          margin: const EdgeInsets.only(left: 60),
+                          child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    ClipOval(
+                                      child: Material(
+                                        color: Color(0xFF56f2ca),
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              rememberMe = !rememberMe;
+                                            });
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: rememberMe
+                                                ? Image.asset(
+                                              'lib/assets/remembermeicon.png',
+                                              width: 20,
+                                              height: 20,
+                                              color: Colors.black,
+                                            )
+                                                : Container(),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 20),
-                                    child: Text(
-                                      'Remember Me',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFFbdc9db),
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 20),
+                                      child: Text(
+                                        'Remember Me',
+                                        style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xFFbdc9db),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 70),
-                                child: UnicornOutlineButton(
-                                  color: const Color(0xFF15e0c3),
-                                  strokeWidth: 2,
-                                  radius: 24,
-                                  gradient: const LinearGradient(colors: [Color(0xFF15e0c3), Color(0xFF15e0c3)]),
-                                  child: Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w100,
-                                      foreground: Paint()
-                                        ..color = Colors.white
-                                        ..strokeWidth = 1
-                                        ..style = PaintingStyle.fill,
+                                  ],
+                                ),
+                                const SizedBox(height: 30),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 70),
+                                  child: UnicornOutlineButton(
+                                    color: const Color(0xFF15e0c3),
+                                    strokeWidth: 2,
+                                    radius: 24,
+                                    gradient: const LinearGradient(colors: [Color(0xFF15e0c3), Color(0xFF15e0c3)]),
+                                    child: Text(
+                                      'Sign Up',
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w100,
+                                        foreground: Paint()
+                                          ..color = Colors.white
+                                          ..strokeWidth = 1
+                                          ..style = PaintingStyle.fill,
+                                      ),
                                     ),
-                                  ),
-                                  onPressed: () {
-                                    print("Selected Option: $selectedOption");
-                                    homeController.register().then((value) => homeController.login().then((_){
-                                      if (selectedOption == 'patient') {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => WelcomeScreen(email: homeController.emailController.text,
-                                              username: homeController.nameController.text),
-                                          ),
-                                        );
-                                      } else if (selectedOption == 'doctor') {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ChatScreenn(),
-                                          ),
+                                    onPressed: () {
+                                      print("Selected Option: $selectedOption");
+                                      homeController.register().then((value) => homeController.login().then((_){
+                                        if (selectedOption == 'patient') {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => WelcomeScreen(email: homeController.emailController.text,
+                                                username: homeController.nameController.text),
+                                            ),
+                                          );
+                                        } else if (selectedOption == 'doctor') {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ChatScreenn(),
+                                            ),
+                                          );
+                                        }
+                                        // Navigator.pushReplacement(
+                                        //   context,
+                                        //   MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                                        // );
+                                      }
+                                      )
+                                      );
+                                      if (_formKey.currentState!.validate()) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Processing Data')),
                                         );
                                       }
-                                      // Navigator.pushReplacement(
-                                      //   context,
-                                      //   MaterialPageRoute(builder: (context) => WelcomeScreen()),
-                                      // );
-                                    }
-                                    )
-                                    );
-                                    if (_formKey.currentState!.validate()) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Processing Data')),
-                                      );
-                                    }
-                                  },
+                                    },
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 30),
-                            ]
+                                const SizedBox(height: 30),
+                              ]
+                          ),
+
                         ),
 
-                      ),
-
-                      // Add more form fields or widgets here
-                    ],
+                        // Add more form fields or widgets here
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -312,7 +339,7 @@ class TextFieldContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
     return Container(
-      margin:const  EdgeInsets.symmetric(vertical: 20),
+      margin:const  EdgeInsets.symmetric(vertical: 14),
       padding:const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       // width: size.width * 0.8,
       width: 300,
