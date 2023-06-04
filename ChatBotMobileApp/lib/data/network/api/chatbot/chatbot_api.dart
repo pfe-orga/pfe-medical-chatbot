@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 import '../../../models/ChatbotModel.dart';
+import '../../../models/MedicamentModel.dart';
 import '../../../models/MedicationModel.dart';
+import '../../../models/MedicineInfoModel.dart';
 import '../dio_client.dart';
 import 'dart:io';
 
@@ -17,20 +19,63 @@ class ChatbotApi{
   }
 
   Future<MedicationModel> GetMedicineInfoAsync(File image) async {
-    final response = await dioClient.post("${Endpoints.SecurityEndpoints}/medicineinfo", options: Options(
+    String endpoint = "${Endpoints.SecurityEndpoints}/medicineinfo";
+    String boundary = 'boundary';
+
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(image.path, filename: 'image.png'),
+    });
+
+    Options options = Options(
       headers: {
-        'Content-Type': 'application/json', // Replace with the appropriate content type
-      }), data: jsonEncode({
-      'image': base64Encode(await image.readAsBytes()),
-    }),
+        'Content-Type': 'multipart/form-data; boundary=$boundary',
+      },
     );
-    final responseData = response.data as Map<String, dynamic>;
-    return MedicationModel.fromJson(responseData);
+
+    try {
+      Response response = await dioClient.post(endpoint, data: formData, options: options);
+      Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
+      return MedicationModel.fromJson(responseData);
+    } catch (error) {
+      throw Exception('Failed to get medicine info: $error');
+    }
   }
 
-  Future<MedicationModel> GetMedicineResponse(String text) async {
-    final response = await dioClient.post("${Endpoints.SecurityEndpoints}/medicineinfotext");
-    final responseData = response.data as Map<String, dynamic>;
-    return MedicationModel.fromJson(responseData);
+
+  Future<MedicamentModel> GetMedicineResponse(String text) async {
+    try {
+      final response = await dioClient.post(
+        "${Endpoints.SecurityEndpoints}/medicineinfotext",
+        data: {"input": text},
+      );
+      final responseData = response.data;
+      return MedicamentModel.fromJson(responseData);
+    } catch (error) {
+      print("Error in GetMedicineResponse: $error");
+      throw error;
+    }
+  }
+
+  Future<MedicineInfoResponse> getMedicineInfo(File image) async {
+    String endpoint = "${Endpoints.SecurityEndpoints}/medicineinfo";
+    String boundary = 'boundary';
+
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(image.path, filename: 'image.png'),
+    });
+
+    Options options = Options(
+      headers: {
+        'Content-Type': 'multipart/form-data; boundary=$boundary',
+      },
+    );
+
+    try {
+      Response response = await dioClient.post(endpoint, data: formData, options: options);
+      Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
+      return MedicineInfoResponse.fromJson(responseData);
+    } catch (error) {
+      throw Exception('Failed to get medicine info: $error');
+    }
   }
 }

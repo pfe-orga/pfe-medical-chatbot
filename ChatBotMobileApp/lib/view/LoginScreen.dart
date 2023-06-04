@@ -4,6 +4,7 @@ import '../controllers/HomeController.dart';
 import '../dependency_injection/service_locator.dart';
 import 'AdminWelcomePage.dart';
 import 'ChatScreen.dart';
+import 'DoctorWelcomeScreen.dart';
 import 'WelcomeScreen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -205,7 +206,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ChatScreenn(),
+                                                builder: (context) =>  DoctorWelcomeScreen(email: homeController.emailController.text,
+                                                    username: homeController.nameController.text),
                                               ),
                                             );
                                             break;

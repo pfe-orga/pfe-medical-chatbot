@@ -7,6 +7,7 @@ import 'ChatScreen.dart';
 import 'DoctorsList.dart';
 import 'MedicationsReminderScreen.dart';
 import 'ProfileScreen.dart';
+import 'SearchMedicationScreen.dart';
 
 
 
@@ -29,145 +30,164 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Container(
-          child: Stack(
-              children:[
-                SizedBox(
-                  width: screenSize.width,
-                  height: screenSize.height,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFc0c3c9).withOpacity(1.0),
-                          spreadRadius: 5,
-                          blurRadius: 30,
-                          offset: Offset(0, 5),
+      resizeToAvoidBottomInset: true,
+      body: Stack(
+          children:[
+            SizedBox(
+              width: screenSize.width,
+              height: screenSize.height,
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFc0c3c9).withOpacity(1.0),
+                      spreadRadius: 5,
+                      blurRadius: 30,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                  image: DecorationImage(
+                    image: AssetImage("lib/assets/firstscreenimage.png"),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+            ),
+
+            Positioned(
+              top: 280,
+              left: 20,
+              right: 20,
+
+              child: Container(
+                height: screenSize.height - 280,
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      UnicornOutlineButton(
+                        color: const Color(0xFF15e0c3),
+                        strokeWidth: 20,
+                        radius: 24,
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF51f8e6), Color(0xFF5eeaa2)],
                         ),
-                      ],
-                      image: DecorationImage(
-                        image: AssetImage("lib/assets/firstscreenimage.png"),
-                        fit: BoxFit.fill,
+                        child: Text(
+                          'Sanitas Bot',
+                          style: TextStyle(
+                            fontFamily: 'coolvetica',
+                            fontSize: 30,
+                            fontWeight: FontWeight.w300,
+                            foreground: Paint()
+                              ..color = Colors.white
+                              ..strokeWidth = 1
+                              ..style = PaintingStyle.fill,
+                          ),
+                        ),
+                        onPressed: () {
+                          Get.to(ChatScreenn());
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      UnicornOutlineButton(
+                          color: const Color(0xFF15e0c3),
+                          strokeWidth: 10,
+                          radius: 24,
+                          gradient: const LinearGradient(colors: [Color(0xFFc65af8), Color(0xFFc65af8)]),
+                          child: Text(
+                            'Profile',
+                            style: TextStyle(
+                              fontFamily: 'coolvetica',
+                              fontSize: 30,
+                              fontWeight: FontWeight.w300,
+                              foreground: Paint()
+                                ..color = Colors.white
+                                ..strokeWidth = 1
+                                ..style = PaintingStyle.fill,
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.to(ProfileScreen(email: widget.email,
+                                username: widget.username)
+                            );
+                          }
+                      ),
+                      const SizedBox(height: 20),
+
+                      UnicornOutlineButton(
+                    color: const Color(0xFF15e0c3),
+                    strokeWidth: 10,
+                    radius: 24,
+                    gradient: const LinearGradient(colors: [Color(0xFF53abef), Color(0xFF4a7ff8)]),
+                    child: Text(
+                      'Set Medications Reminders',
+                      style: TextStyle(
+                        fontFamily: 'coolvetica',
+                        fontSize: 26,
+                        fontWeight: FontWeight.w300,
+                        foreground: Paint()
+                          ..color = Colors.white
+                          ..strokeWidth = 1
+                          ..style = PaintingStyle.fill,
                       ),
                     ),
-                  ),
-                ),
-                Positioned(
-                  top: 280,
-                  // bottom: 100,
-                  left: 20,
-                  right: 20,
-                  child: UnicornOutlineButton(
-                      color: const Color(0xFF15e0c3),
-                      strokeWidth: 10,
-                      radius: 24,
-                      gradient: const LinearGradient(colors: [Color(0xFF51f8e6), Color(0xFF5eeaa2)]),
-                      child: Text(
-                        'Sanitas Bot',
-                        style: TextStyle(
-                          fontFamily: 'coolvetica',
-                          fontSize: 40,
-                          fontWeight: FontWeight.w300,
-                          foreground: Paint()
-                            ..color = Colors.white
-                            ..strokeWidth = 1
-                            ..style = PaintingStyle.fill,
-                        ),
+                    onPressed: () {
+                      Get.to(MedicationReminder());
+                    }
+                   ),
+                      const SizedBox(height: 20),
+                      UnicornOutlineButton(
+                          color: const Color(0xFF15e0c3),
+                          strokeWidth: 10,
+                          radius: 24,
+                          gradient: const LinearGradient(colors: [Color(0xFFea7239), Color(0xFFf8993c)]),
+                          child: Text(
+                            'Schedule Appointment',
+                            style: TextStyle(
+                              fontFamily: 'coolvetica',
+                              fontSize: 26,
+                              fontWeight: FontWeight.w300,
+                              foreground: Paint()
+                                ..color = Colors.white
+                                ..strokeWidth = 1
+                                ..style = PaintingStyle.fill,
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.to(DoctorsList());
+                          }
                       ),
-                      onPressed: () {
-                        Get.to(ChatScreenn());
-                      }
-
-                  ),
-                ),
-                Positioned(
-                  top: 420,
-                  // bottom: 100,
-                  left: 20,
-                  right: 20,
-                  child: UnicornOutlineButton(
-                      color: const Color(0xFF15e0c3),
-                      strokeWidth: 10,
-                      radius: 24,
-                      gradient: const LinearGradient(colors: [Color(0xFFc65af8), Color(0xFFc65af8)]),
-                      child: Text(
-                        'Profile',
-                        style: TextStyle(
-                          fontFamily: 'coolvetica',
-                          fontSize: 40,
-                          fontWeight: FontWeight.w300,
-                          foreground: Paint()
-                            ..color = Colors.white
-                            ..strokeWidth = 1
-                            ..style = PaintingStyle.fill,
-                        ),
+                      const SizedBox(height: 20),
+                      UnicornOutlineButton(
+                          color: const Color(0xFF15e0c3),
+                          strokeWidth: 10,
+                          radius: 24,
+                          gradient: LinearGradient(colors: [Color(0xFFeb4eac), Color(0xFFf64377)]),
+                          child: Text(
+                            'Search Medication',
+                            style: TextStyle(
+                              fontFamily: 'coolvetica',
+                              fontSize: 28,
+                              fontWeight: FontWeight.w300,
+                              foreground: Paint()
+                                ..color = Colors.white
+                                ..strokeWidth = 1
+                                ..style = PaintingStyle.fill,
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.to(SearchMedicationScreen());
+                          }
                       ),
-                      onPressed: () {
-                        Get.to(ProfileScreen(email: widget.email,
-                          username: widget.username)
-                        );
-                      }
+                      const SizedBox(height: 20),
+                    ],
                   ),
                 ),
-                SizedBox(height: 10),
-                Positioned(
-                  top: 555,
-                  // bottom: 100,
-                  left: 20,
-                  right: 20,
-                  child: UnicornOutlineButton(
-                      color: const Color(0xFF15e0c3),
-                      strokeWidth: 10,
-                      radius: 24,
-                      gradient: const LinearGradient(colors: [Color(0xFF53abef), Color(0xFF4a7ff8)]),
-                      child: Text(
-                        'Set Medications Reminders',
-                        style: TextStyle(
-                          fontFamily: 'coolvetica',
-                          fontSize: 40,
-                          fontWeight: FontWeight.w300,
-                          foreground: Paint()
-                            ..color = Colors.white
-                            ..strokeWidth = 1
-                            ..style = PaintingStyle.fill,
-                        ),
-                      ),
-                      onPressed: () {
-                        Get.to(MedicationReminder());
-                      }
-                  ),
-                ),
-                Positioned(
-                  top: 695,
-                  // bottom: 100,
-                  left: 20,
-                  right: 20,
-                  child: UnicornOutlineButton(
-                      color: const Color(0xFF15e0c3),
-                      strokeWidth: 10,
-                      radius: 24,
-                      gradient: const LinearGradient(colors: [Color(0xFFea7239), Color(0xFFf8993c)]),
-                      child: Text(
-                        'Schedule Appointment',
-                        style: TextStyle(
-                          fontFamily: 'coolvetica',
-                          fontSize: 40,
-                          fontWeight: FontWeight.w300,
-                          foreground: Paint()
-                            ..color = Colors.white
-                            ..strokeWidth = 1
-                            ..style = PaintingStyle.fill,
-                        ),
-                      ),
-                      onPressed: () {
-                        Get.to(DoctorsList());
-                      }
-                  ),
-                ),
-              ]
-          )
-      ),
-    );
+              ),
+            ),
+                ],
+              ),
+            );
   }
 }
 class UnicornOutlineButton extends StatelessWidget {
@@ -201,7 +221,7 @@ class UnicornOutlineButton extends StatelessWidget {
         behavior: HitTestBehavior.translucent,
         onTap: _callback,
         child: Container(
-          constraints: BoxConstraints(minWidth: 120, minHeight: 120),
+          constraints: BoxConstraints(minWidth: 350, minHeight: 140),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,

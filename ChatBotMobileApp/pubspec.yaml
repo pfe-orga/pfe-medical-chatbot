@@ -104,6 +104,8 @@ flutter:
     - lib/assets/logosearch2.png
     - lib/assets/doctorlistbackground.png
     - lib/assets/_Group_.png
+    - lib/assets/searchpatient.png
+    - lib/assets/patient.png
 
 
   fonts:
@@ -115,7 +117,10 @@ flutter:
         - asset: lib/fonts/Poppins-Regular.ttf
     - family: coolvetica
       fonts:
-        - asset: lib/fonts/coolvetica condensed rg.otf
+        - asset: lib/fonts/coolvetica rg.otf
+    - family: PoppinsBold
+      fonts:
+        - asset: lib/fonts/Poppins-Bold.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

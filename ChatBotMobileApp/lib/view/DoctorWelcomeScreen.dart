@@ -1,21 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'UsersList.dart';
 
-class AdminWelcomeScreen extends StatefulWidget {
+import 'SearchMedicationScreen.dart';
+import 'SearchPatientScreen.dart';
+
+
+class DoctorWelcomeScreen extends StatefulWidget {
   final String email;
   final String username;
-  const AdminWelcomeScreen({Key? key,
+  const DoctorWelcomeScreen({Key? key,
     required this.email,
     required this.username}) : super(key: key);
 
   @override
-  State<AdminWelcomeScreen> createState() => _AdminWelcomeScreenState();
+  State<DoctorWelcomeScreen> createState() => _DoctorWelcomeScreenState();
 }
 
-class _AdminWelcomeScreenState extends State<AdminWelcomeScreen> {
+class _DoctorWelcomeScreenState extends State<DoctorWelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -46,30 +48,62 @@ class _AdminWelcomeScreenState extends State<AdminWelcomeScreen> {
 
             const SizedBox(height: 20),
             Positioned(
-              top: 400,
+              top: 350,
               // bottom: 100,
               left: 20,
               right: 20,
-              child: UnicornOutlineButton(
-                  color: const Color(0xFF15e0c3),
-                  strokeWidth: 10,
-                  radius: 24,
-                  gradient: const LinearGradient(colors: [Color(0xFF53abef), Color(0xFF4a7ff8)]),
-                  child: Text(
-                    'User management',
-                    style: TextStyle(
-                      fontFamily: 'coolvetica',
-                      fontSize: 40,
-                      fontWeight: FontWeight.w300,
-                      foreground: Paint()
-                        ..color = Colors.white
-                        ..strokeWidth = 1
-                        ..style = PaintingStyle.fill,
+              child: Container(
+                height: screenSize.height - 280,
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children:[
+                     UnicornOutlineButton(
+                        color: const Color(0xFF15e0c3),
+                        strokeWidth: 10,
+                        radius: 24,
+                        gradient: const LinearGradient(colors: [Color(0xFF53abef), Color(0xFF4a7ff8)]),
+                        child: Text(
+                          'Search Patient',
+                          style: TextStyle(
+                            fontFamily: 'coolvetica',
+                            fontSize: 28,
+                            fontWeight: FontWeight.w300,
+                            foreground: Paint()
+                              ..color = Colors.white
+                              ..strokeWidth = 1
+                              ..style = PaintingStyle.fill,
+                          ),
+                        ),
+                        onPressed: () {
+                          Get.to(SearchPatientScreen());
+                        }
                     ),
+                      const SizedBox(height: 20),
+                      UnicornOutlineButton(
+                          color: const Color(0xFF15e0c3),
+                          strokeWidth: 10,
+                          radius: 24,
+                          gradient: LinearGradient(colors: [Color(0xFFeb4eac), Color(0xFFf64377)]),
+                          child: Text(
+                            'Search Medication',
+                            style: TextStyle(
+                              fontFamily: 'coolvetica',
+                              fontSize: 28,
+                              fontWeight: FontWeight.w300,
+                              foreground: Paint()
+                                ..color = Colors.white
+                                ..strokeWidth = 1
+                                ..style = PaintingStyle.fill,
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.to(SearchMedicationScreen());
+                          }
+                      ),
+              ]
                   ),
-                  onPressed: () {
-                    Get.to(UsersList());
-                  }
+                ),
               ),
             ),
           ],
@@ -109,7 +143,7 @@ class UnicornOutlineButton extends StatelessWidget {
         behavior: HitTestBehavior.translucent,
         onTap: _callback,
         child: Container(
-          constraints: BoxConstraints(minWidth: 200, minHeight: 200),
+          constraints: BoxConstraints(minWidth: 350, minHeight: 170),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
