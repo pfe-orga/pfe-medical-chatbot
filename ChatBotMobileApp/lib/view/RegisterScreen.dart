@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../controllers/HomeController.dart';
 import '../dependency_injection/service_locator.dart';
 import 'ChatScreen.dart';
+import 'DoctorWelcomeScreen.dart';
 import 'WelcomeScreen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -279,7 +280,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => ChatScreenn(),
+                                              builder: (context) => DoctorWelcomeScreen(email: homeController.emailController.text,
+                                                  username: homeController.nameController.text),
                                             ),
                                           );
                                         }

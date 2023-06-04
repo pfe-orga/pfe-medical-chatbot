@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../controllers/ChatBotController.dart';
+import '../data/models/MedicamentModel.dart';
+import '../dependency_injection/service_locator.dart';
 import 'galleryScreen.dart';
 
 class SearchMedicationScreen extends StatefulWidget {
@@ -7,12 +10,23 @@ class SearchMedicationScreen extends StatefulWidget {
 }
 
 class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
+  final chatbotController = getIt<ChatbotController>();
+  String? medicineName;
+  String? medicinePrice;
+  String? medicineDate;
   String? medicineInfo;
 
-  void _handleMedicineInfoReceived(String response) {
+  void _handleMedicineInfoReceived(MedicamentModel medication) {
     setState(() {
-      medicineInfo = response;
+      medicineName = medication.medicine_name;
+      medicinePrice = medication.price;
+      medicineDate = medication.date;
     });
+  }
+
+  void _handleMedicineInfo(String text) async {
+    final response = await chatbotController.GetMedicineResponse(text);
+    _handleMedicineInfoReceived(response);
   }
 
   void _showBottomSheet(BuildContext context) {
@@ -26,7 +40,7 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
           height: 200,
           child: ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-            child: MedicationPhoto(onMedicineInfoReceived: _handleMedicineInfoReceived),
+            child: MedicationPhoto(onMedicineInfoReceived: _handleMedicineInfo),
           ),
         );
       },
@@ -74,6 +88,7 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
                       children: [
                         Expanded(
                           child: TextFormField(
+                            controller: chatbotController.medicine_nameController,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Search for',
@@ -89,7 +104,10 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
                         IconButton(
                           icon: const Icon(Icons.search, color: Color(0xFF93aece)),
                           onPressed: () {
-                            // Perform search if needed
+                            final String enteredMedicineName = chatbotController.medicine_nameController.text;
+                            if (enteredMedicineName.isNotEmpty) {
+                              _handleMedicineInfo(enteredMedicineName);
+                            }
                           },
                         ),
                       ],
@@ -98,17 +116,128 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
                 ),
               ),
             ),
-            Positioned(
-              top: 100,
+            if (medicineName != null && medicinePrice != null && medicineDate != null) Positioned(
+              top: 350,
               left: 0,
               right: 0,
-              child: Text(
-                medicineInfo ?? '', // Display the medicine information
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontFamily: 'Poppins',
+              child: FractionallySizedBox(
+                widthFactor: 0.9,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [Color(0xFFeb4eac), Color(0xFFf64377)]),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.medical_information,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            'Medication Name:',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 23,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            medicineName!,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.monetization_on,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Text(
+                                'Medication Price:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 23,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            medicinePrice!,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.expand_circle_down,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                'Expiration Date:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 23,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            medicineDate!,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -133,10 +262,10 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
   }
 }
 
-
 class TextFieldContainer extends StatelessWidget {
   final Widget child;
   const TextFieldContainer({Key? key, required this.child}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -152,5 +281,3 @@ class TextFieldContainer extends StatelessWidget {
     );
   }
 }
-
-

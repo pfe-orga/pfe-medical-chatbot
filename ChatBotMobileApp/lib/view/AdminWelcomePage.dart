@@ -2,9 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
-import 'ChatScreen.dart';
-import 'ProfileScreen.dart';
 import 'UsersList.dart';
 
 class AdminWelcomeScreen extends StatefulWidget {
@@ -46,63 +43,7 @@ class _AdminWelcomeScreenState extends State<AdminWelcomeScreen> {
                 ),
               ),
             ),
-            // Positioned(
-            //   top: 310,
-            //   // bottom: 100,
-            //   left: 20,
-            //   right: 20,
-            //   child: UnicornOutlineButton(
-            //       color: const Color(0xFF15e0c3),
-            //       strokeWidth: 10,
-            //       radius: 24,
-            //       gradient: const LinearGradient(colors: [Color(0xFF51f8e6), Color(0xFF5eeaa2)]),
-            //       child: Text(
-            //         'Sanitas Bot',
-            //         style: TextStyle(
-            //           fontFamily: 'coolvetica',
-            //           fontSize: 40,
-            //           fontWeight: FontWeight.w300,
-            //           foreground: Paint()
-            //             ..color = Colors.white
-            //             ..strokeWidth = 1
-            //             ..style = PaintingStyle.fill,
-            //         ),
-            //       ),
-            //       onPressed: () {
-            //         Get.to(ChatScreenn());
-            //       }
-            //   ),
-            // ),
-            // // const SizedBox(height: 20),
-            // Positioned(
-            //   top: 480,
-            //   // bottom: 100,
-            //   left: 20,
-            //   right: 20,
-            //   child: UnicornOutlineButton(
-            //       color: const Color(0xFF15e0c3),
-            //       strokeWidth: 10,
-            //       radius: 24,
-            //       gradient: const LinearGradient(colors: [Color(0xFFc65af8), Color(0xFFc65af8)]),
-            //       child: Text(
-            //         'Profile',
-            //         style: TextStyle(
-            //           fontFamily: 'coolvetica',
-            //           fontSize: 40,
-            //           fontWeight: FontWeight.w300,
-            //           foreground: Paint()
-            //             ..color = Colors.white
-            //             ..strokeWidth = 1
-            //             ..style = PaintingStyle.fill,
-            //         ),
-            //       ),
-            //       onPressed: () {
-            //         Get.to(ProfileScreen(email: widget.email,
-            //             username: widget.username)
-            //         );
-            //       }
-            //   ),
-            // ),
+
             const SizedBox(height: 20),
             Positioned(
               top: 400,

@@ -105,7 +105,7 @@ class _DoctorsListState extends State<DoctorsList> {
             ),
           ),
           Positioned(
-            top: 180,
+            top: 220,
             left: 0,
             right: 0,
             child: Padding(
@@ -116,7 +116,7 @@ class _DoctorsListState extends State<DoctorsList> {
                       child: const Text(
                         'ID',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 14,
                           fontFamily: 'coolvetica',
                           color: Color(0xFF93aece),
                         ),
@@ -129,7 +129,7 @@ class _DoctorsListState extends State<DoctorsList> {
                     Container(
                       child: const Text('Doctor',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 14,
                           fontFamily: 'coolvetica',
                           color: Color(0xFF93aece),
                         ),
@@ -139,7 +139,7 @@ class _DoctorsListState extends State<DoctorsList> {
                     Container(
                       child: const Text('Location',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 14,
                           fontFamily: 'coolvetica',
                           color: Color(0xFF93aece),
                         ),
@@ -150,7 +150,7 @@ class _DoctorsListState extends State<DoctorsList> {
                     Container(
                       child: const Text('call',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 14,
                           fontFamily: 'coolvetica',
                           color: Color(0xFF93aece),
                         ),

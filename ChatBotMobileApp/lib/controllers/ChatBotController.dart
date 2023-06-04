@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:pfemedicalchatbotapp/data/models/MedicamentModel.dart';
 import '../data/models/ChatbotModel.dart';
 import '../data/models/MedicationModel.dart';
+import '../data/models/MedicineInfoModel.dart';
 import '../data/network/api/chatbot/chatbot_api.dart';
 import '../data/sharedprefs/shared_resources_service.dart';
 import 'dart:io';
@@ -31,9 +33,7 @@ class ChatbotController {
     return await chatbotApi.GetMedicineInfoAsync(image);
   }
 
-
-
-  Future<MedicationModel> GetMedicineResponse(String text) async {
+  Future<MedicamentModel> GetMedicineResponse(String text) async {
     return await chatbotApi.GetMedicineResponse(text);
   }
 

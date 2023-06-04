@@ -120,7 +120,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "https://e7c5-197-240-45-82.ngrok-free.app";
+  static const String baseUrl = "https://9224-197-244-20-60.ngrok-free.app";
 
   // receiveTimeout
   static const int receiveTimeout = 150000;

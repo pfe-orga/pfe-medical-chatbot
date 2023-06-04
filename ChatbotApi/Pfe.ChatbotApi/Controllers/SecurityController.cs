@@ -267,7 +267,7 @@ namespace Pfe.ChatbotApi.Controllers
         public async Task<PythonResponse> GetChatbotResponseAsync(string text)
         {
             using var client = new HttpClient();
-            client.BaseAddress = new Uri("https://2f49-197-240-45-82.ngrok-free.app");
+            client.BaseAddress = new Uri("https://a47c-197-244-20-60.ngrok-free.app");
             var request = new PythonRequest
             {
                 input_text = text,
@@ -284,7 +284,7 @@ namespace Pfe.ChatbotApi.Controllers
         public async Task<Resp> GetMedicineInfoAsync(IFormFile file)
         {
             using var client = new HttpClient();
-            client.BaseAddress = new Uri("https://2f49-197-240-45-82.ngrok-free.app");
+            client.BaseAddress = new Uri("https://a47c-197-244-20-60.ngrok-free.app");
 
             var requestContent = new MultipartFormDataContent();
             using var stream = file.OpenReadStream();
@@ -293,7 +293,7 @@ namespace Pfe.ChatbotApi.Controllers
             byte[] fileBytes = memoryStream.ToArray();
             string fileBase64 = "data:image/png;base64,".Replace("png", file.FileName.Split(".")[1]) + Convert.ToBase64String(fileBytes);       
             Console.WriteLine("file:", fileBase64);
-            var request = new Request
+            var request = new RequestPayload
             {
                 input = fileBase64,
             };
@@ -305,18 +305,17 @@ namespace Pfe.ChatbotApi.Controllers
         }
         [AllowAnonymous]
         [HttpPost("medicineinfotext")]
-        public async Task<Resp> GetMedicineResponse(string text)
+        public async Task<Resp> GetMedicineResponse([FromBody] RequestPayload payload)
         {
             using var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5000");
-            var request = new Request
+            client.BaseAddress = new Uri("https://a47c-197-244-20-60.ngrok-free.app");
+            var request = new RequestPayload
             {
-                input = text,
+                input = payload.input,
             };
             var data = new System.Net.Http.StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
             var result = await client.PostAsync("/api/medbot", data);
             return JsonSerializer.Deserialize<Resp>(await result.Content.ReadAsStringAsync());
-
         }
 
 
@@ -387,7 +386,7 @@ namespace Pfe.ChatbotApi.Controllers
         public string date { get; set; }
         public string error { get; set; }
     }
-    public class Request
+    public class RequestPayload
     {
         public string input { get; set;}
     }

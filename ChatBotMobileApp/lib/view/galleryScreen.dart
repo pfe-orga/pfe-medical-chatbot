@@ -45,7 +45,7 @@ class _MedicationPhotoState extends State<MedicationPhoto> {
             Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              
+
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white, // Button background color
@@ -110,7 +110,28 @@ class _MedicationPhotoState extends State<MedicationPhoto> {
       maxHeight: 1800,
     );
     if (pickedFile != null) {
-       imageFile = File(pickedFile.path);
+      setState(() {
+        imageFile = File(pickedFile.path);
+        print('imageFile: ${imageFile}');
+      });
+      final medicineInfo = await chatbotController.GetMedicineInfoAsync(
+          imageFile);
+      final response = '${medicineInfo.medicine_name ?? ''}, ${medicineInfo
+          .price ?? ''}, ${medicineInfo.date ?? ''}';
+      print('response: ${response}');
+      final medecine_name = '${medicineInfo.medicine_name ?? ''}';
+      print('medecine_name: ${medecine_name}');
+      final medecine_price = '${medicineInfo.price ?? ''}';
+      print('medecine_price: ${medecine_price}');
+      final medecine_date = '${medicineInfo.date ?? ''}';
+      print('medecine_date: ${medecine_date}');
+
+
+
+      widget.onMedicineInfoReceived(
+        response,
+      );
+
     }
   }
 
@@ -130,8 +151,19 @@ class _MedicationPhotoState extends State<MedicationPhoto> {
       final response = '${medicineInfo.medicine_name ?? ''}, ${medicineInfo
           .price ?? ''}, ${medicineInfo.date ?? ''}';
       print('response: ${response}');
+      final medecine_name = '${medicineInfo.medicine_name ?? ''}';
+      print('medecine_name: ${medecine_name}');
+      final medecine_price = '${medicineInfo.price ?? ''}';
+      print('medecine_price: ${medecine_price}');
+      final medecine_date = '${medicineInfo.date ?? ''}';
+      print('medecine_date: ${medecine_date}');
+
+
+
+
       widget.onMedicineInfoReceived(
-          response); // Call the callback function with the response    }
+          response,
+      );
     }
   }
 
